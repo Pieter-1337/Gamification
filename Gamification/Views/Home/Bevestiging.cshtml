@@ -1,0 +1,11 @@
+﻿
+@{
+    ViewBag.Title = "Bevestiging";
+}
+
+<h2>Bevestiging</h2>
+
+@if (TempData["LoginValid"] != null)
+{
+    <div class="alert alert-success">@TempData["LoginValid"]</div>
+}

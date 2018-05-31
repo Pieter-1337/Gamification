@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+@using (Html.BeginForm("Bevestiging", "Home", null, FormMethod.Post, new { @class = "form", role = "form" }))
+{
+    <div class="form-group">
+        <label class="control-label">UserName</label>
+        <input name="username" type="text" class="form-control valid" data-val="true" data-val-required="This field is required" required="required" />
+        <span class="field-validation-valid text-danger" data-valmsg-for="naam" data-valmsg-replace="true"></span>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Password</label>
+        <input name="password" class="form-control valid" type="password" required="required" data-val="true" data-val-required="This field is required" />
+        <span class="field-validation-valid text-danger" data-valmsg-for="password" data-valmsg-replace="true"></span>
+    </div>
+
+    <input type="submit" value="Aanmelden" class="btn btn-primary" />
+}
