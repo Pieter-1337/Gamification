@@ -2,10 +2,19 @@
     ViewBag.Title = "Home Page";
 }
 
+<div class="container">
 
+    <H1>Welcome to the Gamification App</H1>
 
-@if (Session["User"] == null)
-{
-    @Html.ActionLink("Register", "Create", "Users", null, new { @class = "btn btn-primary"})
-    @Html.ActionLink("Login", "Login", "Home", null, new { @class = "btn btn-primary"})
-}
+    @if (TempData["LoginValid"] != null)
+    {
+        <div class="alert alert-success">@TempData["LoginValid"]</div>
+    }
+
+    @if (Session["User"] == null)
+    {
+        <p>@Html.ActionLink("Register", "Create", "Users", null, new { @class = "btn btn-primary" }) @Html.ActionLink("Login", "Login", "Home", null, new { @class = "btn btn-primary" })</p>
+
+    }
+</div>
+

@@ -19,7 +19,7 @@
                 @Html.ActionLink("Gamification", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav pull-right">
 
 
                     @if (Session["User"] == null)
@@ -31,7 +31,10 @@
                     {
                         var user = (Gamification.Models.Users)Session["User"];
                         <li>@Html.ActionLink(user.Username, "UserDetail", "Users")</li>
+                        if (user.Role == "Admin")
+                        {
                         <li>@Html.ActionLink("Fill in Points", "AdminUI", "Admin")</li>
+                        }
                         <li>@Html.ActionLink("Logout", "Logout", "Home")</li>
                     }
                 </ul>

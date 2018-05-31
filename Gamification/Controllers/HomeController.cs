@@ -38,6 +38,7 @@ namespace Gamification.Controllers
         [HttpPost]
         public ActionResult Bevestiging(string username, string password)
         {
+            
             var user = _userRepository.GetUser(username, password);
             if (user != null)
             {

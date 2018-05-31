@@ -4,7 +4,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>UserList</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -67,13 +67,11 @@
         <td>
             @Html.DisplayFor(modelItem => item.Country)
         </td>
+        
         <td>
-            @Html.DisplayFor(modelItem => item.Password)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.UserID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.UserID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.UserID })
+            @Html.ActionLink("Edit", "Edit", new { id=item.UserID }, new { @class = "btn btn-primary"}) 
+            @Html.ActionLink("Details", "Details", new { id=item.UserID }, new { @class = "btn btn-warning"}) 
+            @Html.ActionLink("Delete", "Delete", new { id=item.UserID }, new { @class = "btn btn-danger"})
         </td>
     </tr>
 }

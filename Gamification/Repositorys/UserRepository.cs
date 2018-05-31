@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Gamification.Models;
+using BCrypt;
 
 namespace Gamification.Repositorys
 {
@@ -27,7 +28,7 @@ namespace Gamification.Repositorys
                         Role = "Admin",
                         Country = "BE",
                         Division = "Admin",
-                        Password = "BrackeAdmin1993",
+                        Password = BCrypt.Net.BCrypt.HashPassword("BrackeAdmin1993")
 
                     });
 
@@ -42,7 +43,7 @@ namespace Gamification.Repositorys
                         Role = "Admin",
                         Country = "BE",
                         Division = "Admin",
-                        Password = "BrackeAdmin1993",
+                        Password = BCrypt.Net.BCrypt.HashPassword("BrackeAdmin1993")
 
                     });
 
@@ -57,8 +58,18 @@ namespace Gamification.Repositorys
 
         public Users GetUser(string username, string password)
         {
-            var User = (from user in db.Users where user.Username == username && user.Password == password select user).FirstOrDefault();
-            return User;
+            var User = (from user in db.Users where user.Username == username select user).FirstOrDefault();
+            bool validPassword = BCrypt.Net.BCrypt.Verify(password, User.Password);
+            if(validPassword == true)
+            {
+                return User;
+            }
+            else
+            {
+                return null;
+            }
+            
+            
         }
     }
 }

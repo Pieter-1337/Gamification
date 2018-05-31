@@ -7,17 +7,41 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Gamification.Models;
+using Gamification.Repositorys;
+using BCrypt;
 
 namespace Gamification.Controllers
 {
     public class UsersController : Controller
     {
         private GamificationEntities db = new GamificationEntities();
+        private UserRepository _userRepository = null;
+
+        public UsersController()
+        {
+            _userRepository = new UserRepository();
+        }
 
         // GET: Users
         public ActionResult Index()
         {
-            return View(db.Users.ToList());
+            if (Session["User"] != null)
+            {
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    return View(db.Users.ToList());
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
 
         // GET: Users/Details/5
@@ -50,9 +74,22 @@ namespace Gamification.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Leave the password and username variable before the bcrypt otherwise the _userRepo.GetUser will fail
+                var password = users.Password;
+                var username = users.Username;
+                users.Password = BCrypt.Net.BCrypt.HashPassword(users.Password);
+                users.Role = "User";
                 db.Users.Add(users);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                
+                var user = _userRepository.GetUser(username, password);
+                if (user != null)
+                {
+                    Session["User"] = user;
+
+                    TempData["LoginValid"] = "Welcome " + user.First_Name + " " + user.Last_Name;
+                    return RedirectToAction("Index", "Home", null);
+                }    
             }
 
             return View(users);
