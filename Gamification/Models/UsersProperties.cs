@@ -31,9 +31,12 @@ namespace Gamification.Models
         [Display(Name = "Points Level 2")]
         public Nullable<int> Punten_LVL2 { get; set; }
 
-       
-        
-        //[DataType(DataType.Password)]
+        [Display(Name = "Division")]
+        public int DivisionID { get; set; }
+
+        [Display(Name = "Country")]
+        public int CountryID { get; set; }
+
         [Required(ErrorMessage = "This field is required")]
         [DataType(DataType.Password)]
         public string Password { get; set; }

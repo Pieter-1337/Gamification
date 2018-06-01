@@ -29,12 +29,12 @@
         <th>
             @Html.DisplayNameFor(model => model.Punten_LVL2)
         </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.Division)
+        <th>
+            @Html.DisplayNameFor(model => model.DivisionID)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Country)
-        </th>*@
+            @Html.DisplayNameFor(model => model.CountryID)
+        </th>
       
         <th></th>
     </tr>
@@ -59,12 +59,12 @@
         <td>
             @Html.DisplayFor(modelItem => item.Punten_LVL2)
         </td>
-        @*<td>
-            @Html.DisplayFor(modelItem => item.Division)
+        <td>
+            @Html.DisplayFor(modelItem => item.DivisionID)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Country)
-        </td>*@
+            @Html.DisplayFor(modelItem => item.CountryID)
+        </td>
         
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.UserID }, new { @class = "btn btn-primary"}) 

@@ -62,6 +62,8 @@ namespace Gamification.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
+            ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+            ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
             return View();
         }
 
@@ -101,6 +103,8 @@ namespace Gamification.Controllers
                     else
                     {
                         TempData["RegistrationValid"] = "This username is already in use please choose another username";
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
                         return View(users);
                     }
                 }
@@ -108,8 +112,13 @@ namespace Gamification.Controllers
             else
             {
                 TempData["RegistrationValid"] = "The password and Confirm password fields did not match please try again";
+                ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
                 return View(users);
             }
+
+            ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+            ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
             return View(users);
            
         }
