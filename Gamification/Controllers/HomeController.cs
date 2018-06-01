@@ -11,16 +11,23 @@ namespace Gamification.Controllers
     public class HomeController : Controller
     {
         private UserRepository _userRepository = null;
+        private CountryRepository _countryRepository = null;
+        private DivisionRepository _divisionRepository = null;
 
         public HomeController()
         {
             _userRepository = new UserRepository();
+            _countryRepository = new CountryRepository();
+            _divisionRepository = new DivisionRepository();
         }
 
         public ActionResult Index()
         {
+            _divisionRepository.LoadDivisions();
+            _countryRepository.LoadCountries();
             _userRepository.LoadAdmins();
-            return View();
+            var LeaderBoard = _userRepository.GetUsers().ToList();
+            return View(LeaderBoard);
         }
 
 
@@ -45,7 +52,7 @@ namespace Gamification.Controllers
                 Session["User"] = user;
 
                 TempData["LoginValid"] = "Welcome " + user.First_Name + " " + user.Last_Name;
-                return View(user);
+                return RedirectToAction("Index", "Home");
             }
             else
             {

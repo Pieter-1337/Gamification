@@ -21,9 +21,13 @@ namespace Gamification.Models
         public string Last_Name { get; set; }
         public Nullable<int> Punten_LVL1 { get; set; }
         public Nullable<int> Punten_LVL2 { get; set; }
-        public string Division { get; set; }
-        public string Country { get; set; }
         public string Password { get; set; }
+        public string ConfirmPassword { get; set; }
         public string Role { get; set; }
+        public int DivisionID { get; set; }
+        public int CountryID { get; set; }
+    
+        public virtual Countries Countries { get; set; }
+        public virtual Divisions Divisions { get; set; }
     }
 }

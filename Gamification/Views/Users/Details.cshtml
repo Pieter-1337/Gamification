@@ -7,7 +7,7 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Users</h4>
+    <h4>@Model.Username</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -58,7 +58,7 @@
             @Html.DisplayFor(model => model.Punten_LVL2)
         </dd>
 
-        <dt>
+        @*<dt>
             @Html.DisplayNameFor(model => model.Division)
         </dt>
 
@@ -72,11 +72,9 @@
 
         <dd>
             @Html.DisplayFor(model => model.Country)
-        </dd>
+        </dd>*@
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
+       
 
         @*<dd>
             @Html.DisplayFor(model => model.Password)
@@ -85,6 +83,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.UserID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Edit", "Edit", "Users", new { id = Model.UserID }, new { @class = "btn btn-warning"})
+    @Html.ActionLink("Delete", "Delete", "Users", new { id = Model.UserID}, new { @class = "btn btn-danger" })
 </p>

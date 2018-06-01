@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gamification.Models
 {
@@ -30,14 +31,18 @@ namespace Gamification.Models
         [Display(Name = "Points Level 2")]
         public Nullable<int> Punten_LVL2 { get; set; }
 
-        [Required(ErrorMessage = "This field is required")]
-        public string Division { get; set; }
-
-        [Required(ErrorMessage = "This field is required")]
-        public string Country { get; set; }
+       
         
+        //[DataType(DataType.Password)]
         [Required(ErrorMessage = "This field is required")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [NotMapped] // Does not effect your database
+        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "This field is required")]
+       
+        public string ConfirmPassword { get; set; }
 
         public string Role { get; set; }
     }

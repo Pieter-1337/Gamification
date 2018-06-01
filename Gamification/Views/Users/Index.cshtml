@@ -7,7 +7,7 @@
 <h2>UserList</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New User", "Create", null, new { @class = "btn btn-primary"})
 </p>
 <table class="table">
     <tr>
@@ -29,15 +29,13 @@
         <th>
             @Html.DisplayNameFor(model => model.Punten_LVL2)
         </th>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.Division)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Country)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Password)
-        </th>
+        </th>*@
+      
         <th></th>
     </tr>
 
@@ -61,12 +59,12 @@
         <td>
             @Html.DisplayFor(modelItem => item.Punten_LVL2)
         </td>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.Division)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Country)
-        </td>
+        </td>*@
         
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.UserID }, new { @class = "btn btn-primary"}) 

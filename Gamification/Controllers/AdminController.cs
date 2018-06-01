@@ -16,7 +16,7 @@ namespace Gamification.Controllers
 
         public ActionResult AdminUI()
         {
-            return View();
+            return RedirectToAction("Index", "Users");
         }
     }
 }

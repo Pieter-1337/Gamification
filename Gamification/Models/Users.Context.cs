@@ -25,6 +25,8 @@ namespace Gamification.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Countries> Countries { get; set; }
+        public virtual DbSet<Divisions> Divisions { get; set; }
         public virtual DbSet<Users> Users { get; set; }
     }
 }

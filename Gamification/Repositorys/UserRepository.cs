@@ -26,9 +26,10 @@ namespace Gamification.Repositorys
                         First_Name = "Admin1",
                         Last_Name = "Admin1",
                         Role = "Admin",
-                        Country = "BE",
-                        Division = "Admin",
-                        Password = BCrypt.Net.BCrypt.HashPassword("BrackeAdmin1993")
+                        Password = BCrypt.Net.BCrypt.HashPassword("BrackeAdmin1993"),
+                        ConfirmPassword = BCrypt.Net.BCrypt.HashPassword("BrackeAdmin1993"),
+                        CountryID = 1,
+                        DivisionID = 1,
 
                     });
 
@@ -41,10 +42,11 @@ namespace Gamification.Repositorys
                         First_Name = "Admin2",
                         Last_Name = "Admin2",
                         Role = "Admin",
-                        Country = "BE",
-                        Division = "Admin",
-                        Password = BCrypt.Net.BCrypt.HashPassword("BrackeAdmin1993")
-
+                        Password = BCrypt.Net.BCrypt.HashPassword("BrackeAdmin1993"),
+                        ConfirmPassword = BCrypt.Net.BCrypt.HashPassword("BrackeAdmin1993"),
+                        CountryID = 1,
+                        DivisionID = 1,
+                        
                     });
 
                 db.SaveChanges();
@@ -59,17 +61,44 @@ namespace Gamification.Repositorys
         public Users GetUser(string username, string password)
         {
             var User = (from user in db.Users where user.Username == username select user).FirstOrDefault();
-            bool validPassword = BCrypt.Net.BCrypt.Verify(password, User.Password);
-            if(validPassword == true)
+            if (User != null)
             {
-                return User;
+                bool validPassword = BCrypt.Net.BCrypt.Verify(password, User.Password);
+                if (validPassword == true)
+                {
+                    return User;
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
                 return null;
             }
+                
+        }
+
+        public bool CheckUniqueFields(string username, string password)
+        {
+           
+            var User = (from user in db.Users where user.Username == username select user).FirstOrDefault();
+            bool MatchedUsername = false;
+            if(User != null)
+            {
+                if (username == User.Username) { MatchedUsername = true; }
+            }
             
-            
+            if(MatchedUsername == true)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
         }
     }
 }

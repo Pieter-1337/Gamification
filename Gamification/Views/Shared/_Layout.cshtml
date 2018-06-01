@@ -30,7 +30,7 @@
                     else
                     {
                         var user = (Gamification.Models.Users)Session["User"];
-                        <li>@Html.ActionLink(user.Username, "UserDetail", "Users")</li>
+                        <li>@Html.ActionLink(user.Username, "Details", "Users", new { id = user.UserID}, null)</li>
                         if (user.Role == "Admin")
                         {
                         <li>@Html.ActionLink("Fill in Points", "AdminUI", "Admin")</li>

@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Edit";
+    var user = (Gamification.Models.Users)Session["User"];
 }
 
 <h2>Edit</h2>
@@ -49,7 +50,9 @@
             </div>
         </div>
 
-        @* IF SESSION USER HAS ROLE ADMIN VISIBLE OTHERWISE NOT *@
+
+        @if (user.Role == "Admin")
+        {
         <div class="form-group">
             @Html.LabelFor(model => model.Punten_LVL1, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -65,8 +68,9 @@
                 @Html.ValidationMessageFor(model => model.Punten_LVL2, "", new { @class = "text-danger" })
             </div>
         </div>
+        }
 
-        <div class="form-group">
+        @*<div class="form-group">
             @Html.LabelFor(model => model.Division, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Division, new { htmlAttributes = new { @class = "form-control" } })
@@ -80,7 +84,7 @@
                 @Html.EditorFor(model => model.Country, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -92,15 +96,25 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-success" />
             </div>
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+@if (user.Role == "Admin")
+{
+    <div>
+        @Html.ActionLink("Back to UserList", "Index", "Users", null, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Back to UserDetail", "Details", "Users", new { id = user.UserID }, new { @class = "btn btn-warning" })
+    </div>
+}
+else
+{
+    <div>
+        @Html.ActionLink("Back to UserDetail", "Details", "Users", new { id = user.UserID}, new { @class = "btn btn-primary"})
+    </div>
+}
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

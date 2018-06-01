@@ -70,29 +70,48 @@ namespace Gamification.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserID,Username,Email,First_Name,Last_Name,Punten_LVL1,Punten_LVL2,Division,Country,Password")] Users users)
+        public ActionResult Create([Bind(Include = "UserID,Username,Email,First_Name,Last_Name,Punten_LVL1,Punten_LVL2,Division,Country,Password,ConfirmPassword")] Users users)
         {
-            if (ModelState.IsValid)
+            if (users.Password == users.ConfirmPassword)
             {
-                //Leave the password and username variable before the bcrypt otherwise the _userRepo.GetUser will fail
-                var password = users.Password;
-                var username = users.Username;
-                users.Password = BCrypt.Net.BCrypt.HashPassword(users.Password);
-                users.Role = "User";
-                db.Users.Add(users);
-                db.SaveChanges();
-                
-                var user = _userRepository.GetUser(username, password);
-                if (user != null)
+
+                if (ModelState.IsValid)
                 {
-                    Session["User"] = user;
+                    //Leave the password and username variable before the bcrypt otherwise the _userRepo.GetUser will fail
+                    var password = users.Password;
+                    var username = users.Username;
 
-                    TempData["LoginValid"] = "Welcome " + user.First_Name + " " + user.Last_Name;
-                    return RedirectToAction("Index", "Home", null);
-                }    
+                    if (_userRepository.CheckUniqueFields(username, password))
+                    {
+
+                        users.Password = BCrypt.Net.BCrypt.HashPassword(users.Password);
+                        users.Role = "User";
+                        db.Users.Add(users);
+                        db.SaveChanges();
+
+                        var user = _userRepository.GetUser(username, password);
+                        if (user != null)
+                        {
+                            Session["User"] = user;
+
+                            TempData["LoginValid"] = "Welcome " + user.First_Name + " " + user.Last_Name;
+                            return RedirectToAction("Index", "Home", null);
+                        }
+                    }
+                    else
+                    {
+                        TempData["RegistrationValid"] = "This username is already in use please choose another username";
+                        return View(users);
+                    }
+                }
             }
-
+            else
+            {
+                TempData["RegistrationValid"] = "The password and Confirm password fields did not match please try again";
+                return View(users);
+            }
             return View(users);
+           
         }
 
         // GET: Users/Edit/5
