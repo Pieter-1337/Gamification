@@ -72,7 +72,7 @@ namespace Gamification.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserID,Username,Email,First_Name,Last_Name,Punten_LVL1,Punten_LVL2,Division,Country,Password,ConfirmPassword")] Users users)
+        public ActionResult Create([Bind(Include = "UserID,Username,Email,First_Name,Last_Name,Punten_LVL1,Punten_LVL2,DivisionID,CountryID,Password,ConfirmPassword")] Users users)
         {
             if (users.Password == users.ConfirmPassword)
             {
@@ -135,6 +135,8 @@ namespace Gamification.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+            ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
             return View(users);
         }
 
@@ -143,7 +145,7 @@ namespace Gamification.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserID,Username,Email,First_Name,Last_Name,Punten_LVL1,Punten_LVL2,Division,Country,Password")] Users users)
+        public ActionResult Edit([Bind(Include = "UserID,Username,Email,First_Name,Last_Name,Punten_LVL1,Punten_LVL2,DivisionID,CountryID")] Users users)
         {
             if (ModelState.IsValid)
             {
@@ -151,6 +153,8 @@ namespace Gamification.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+            ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
             return View(users);
         }
 
