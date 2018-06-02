@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Gamification.Models;
 using Gamification.Repositorys;
 using BCrypt;
+using System.Data.Entity.Validation;
 
 namespace Gamification.Controllers
 {
@@ -87,6 +88,7 @@ namespace Gamification.Controllers
                     {
 
                         users.Password = BCrypt.Net.BCrypt.HashPassword(users.Password);
+                        users.ConfirmPassword = BCrypt.Net.BCrypt.HashPassword(users.ConfirmPassword);
                         users.Role = "User";
                         db.Users.Add(users);
                         db.SaveChanges();
@@ -147,12 +149,45 @@ namespace Gamification.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "UserID,Username,Email,First_Name,Last_Name,Punten_LVL1,Punten_LVL2,DivisionID,CountryID")] Users users)
         {
+            ModelState.Remove("Password");
+            ModelState.Remove("ConfirmPassword");
+            ModelState.Remove("Role");
+            var extraUserInfo = _userRepository.GetUserById(users.UserID);
+
             if (ModelState.IsValid)
             {
+               
+                users.Password = extraUserInfo.Password;
+                users.ConfirmPassword = extraUserInfo.ConfirmPassword;
+                users.Role = extraUserInfo.Role;
+                
                 db.Entry(users).State = EntityState.Modified;
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbEntityValidationException ex)
+                {
+
+                    foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                    {
+                        foreach (var validationError in entityValidationErrors.ValidationErrors)
+                        {
+                            Response.Write("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
+                        }
+                    }
+
+
+                    ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                    ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                    return View(users);
+
+                }
+
                 return RedirectToAction("Index");
+
             }
+
             ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
             ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
             return View(users);
@@ -181,6 +216,11 @@ namespace Gamification.Controllers
             Users users = db.Users.Find(id);
             db.Users.Remove(users);
             db.SaveChanges();
+            var user = (Gamification.Models.Users)Session["User"];
+            if (user.Role == "User")
+            {
+                Session.Remove("User");
+            }
             return RedirectToAction("Index");
         }
 

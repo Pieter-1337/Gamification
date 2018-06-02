@@ -11,7 +11,8 @@ namespace Gamification.Repositorys
     {
         private GamificationEntities db = new GamificationEntities();
 
-        //Load the 2 admin accounts in the database
+
+        //Load the 2 admin accounts in the database/////////////////////////////////////////////
         public void LoadAdmins()
         {
             var query = (from user in db.Users where user.Username == "Admin1" select user).ToList();
@@ -52,11 +53,18 @@ namespace Gamification.Repositorys
                 db.SaveChanges();
             }
         }
-
+      
+        //////////////////////////////////////////////////////////////////////////////////
+    
+        //Get Users functions
+        //////////////////////////////////////////////////////////////////////////////////
         public List<Users> GetUsers()
         {
+            
             return db.Users.OrderBy(u => u.UserID).ToList();
         }
+
+        
 
         public Users GetUser(string username, string password)
         {
@@ -80,25 +88,53 @@ namespace Gamification.Repositorys
                 
         }
 
-        public bool CheckUniqueFields(string username, string password)
+        public Users GetUserById(int? id)
         {
-           
-            var User = (from user in db.Users where user.Username == username select user).FirstOrDefault();
-            bool MatchedUsername = false;
-            if(User != null)
-            {
-                if (username == User.Username) { MatchedUsername = true; }
-            }
+            return db.Users.Find(id);
+        }
+
+        //Search functions for the leaderboard
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        public List<Users> GetLeaderBoard()
+        {
+            var query = (from user in db.Users orderby (user.Punten_LVL1 + user.Punten_LVL2) descending select user).ToList();
+            return query;
+        }
+
+        public List<Users> GetLeaderBoardByNameAndCountry(List<Users> LeaderBoard, string SearchString, int? SearchCountry)
+        {
+            return (from u in LeaderBoard where u.First_Name.Contains(SearchString) || u.Last_Name.Contains(SearchString) || u.Username.Contains(SearchString) && u.Countries.CountryID.Equals(SearchCountry) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
             
-            if(MatchedUsername == true)
+        }
+
+        public List<Users> GetLeaderBoardByCountry(List<Users> LeaderBoard, int? SearchCountry)
+        {
+            return (from u in LeaderBoard where u.Countries.CountryID.Equals(SearchCountry) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
+        }
+
+        public List<Users> GetLeaderBoardByName(List<Users> LeaderBoard, string SearchString)
+        {
+            return (from u in LeaderBoard where u.First_Name.Contains(SearchString) || u.Last_Name.Contains(SearchString) || u.Username.Contains(SearchString) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
+        }
+
+       
+        //Check if a Username is already taken when someone registers or creates a new user
+        //////////////////////////////////////////////////////////////////////////////////////////
+        public bool CheckUniqueFields(string username, string password)
+        {    
+            var User = (from user in db.Users where user.Username == username select user).FirstOrDefault();
+            
+            if(User != null)
             {
                 return false;
             }
             else
             {
                 return true;
-            }
-
+            }       
+         
         }
     }
 }

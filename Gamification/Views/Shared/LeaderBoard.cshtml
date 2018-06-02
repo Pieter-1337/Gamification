@@ -8,38 +8,56 @@
 <div class="row">
 
     <h3>LeaderBoard</h3>
-    
-    <table class="table table-responsive table-striped" >
-        <thead>
+    @using (Html.BeginForm(FormMethod.Post))
+    {
+        <div class="form-inline">
+            <div class="form-group" style="margin-right:25px;">
+                <p><input type="checkbox" name="SearchByNameCheckBox" value="check" style="margin-right: 10px;" />Search by name or username</p>
+                <p><input name="SearchByNameTextBox" class="form-control" style="width: 175px;" placeholder="Enter search request" /></p>
+            </div>
+
+            <div class="form-group" style="margin-right:25px;">
+                <p><input type="checkbox" name="SearchByCountryCheckBox" value="check" style="margin-right: 10px;" />Search by country</p>
+                <p>@Html.DropDownList("CountryID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+            </div>
+
+            <div class="form-group" style="margin-top: 35px;">
+                <p><input name="SearchBtn" class="btn btn-success" type="submit" value="Search" /> </p>
+            </div>
+         </div>
+
+    }
+    <table class="table" style="margin-top: 25px;">
+
+        <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th class="hidden-xs">First Name</th>
+            <th class="hidden-xs">Last Name</th>
+            <th>Country</th>
+            <th>Points Level1</th>
+            <th>Points Level2</th>
+            <th>Total Points</th>
+        </tr>
+
+
+        @foreach (var user in Model)
+        {
+            i++;
+            int PointsTotal = 0;
+            PointsTotal = Convert.ToInt32(user.Punten_LVL1) + Convert.ToInt32(user.Punten_LVL2);
             <tr>
-                <th>#</th>
-                <th>Username</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Country</th>
-                <th>Points Level1</th>
-                <th>Points Level2</th>
-                <th>Total Points</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model)
-            {
-                i++;
-                int PointsTotal = 0;
-                PointsTotal = Convert.ToInt32(user.Punten_LVL1) + Convert.ToInt32(user.Punten_LVL2);
-            <tr>
-                <th>@i</th>
-                <th>@user.Username</th>
-                <th>@user.First_Name</th>
-                <th>@user.Last_Name</th>
-                <th>@user.Countries.Name</th>
-                <th>@user.Punten_LVL1</th>
-                <th>@user.Punten_LVL2</th>
-                <th>@PointsTotal</th>
+                <td>@i</td>
+                <td>@user.Username</td>
+                <td>@user.First_Name</td>
+                <td>@user.Last_Name</td>
+                <td>@user.Countries.Name</td>
+                <td>@user.Punten_LVL1</td>
+                <td>@user.Punten_LVL2</td>
+                <td>@PointsTotal</td>
 
             </tr>
-            }
-        </tbody>
+        }
+
     </table>
 </div>
