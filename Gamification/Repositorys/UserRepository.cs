@@ -105,7 +105,7 @@ namespace Gamification.Repositorys
 
         public List<Users> GetLeaderBoardByNameAndCountry(List<Users> LeaderBoard, string SearchString, int? SearchCountry)
         {
-            return (from u in LeaderBoard where u.First_Name.Contains(SearchString) || u.Last_Name.Contains(SearchString) || u.Username.Contains(SearchString) && u.Countries.CountryID.Equals(SearchCountry) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
+            return (from u in LeaderBoard where (u.First_Name.Contains(SearchString) || u.Last_Name.Contains(SearchString) || u.Username.Contains(SearchString)) && u.Countries.CountryID.Equals(SearchCountry) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
             
         }
 
