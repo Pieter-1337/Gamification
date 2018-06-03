@@ -168,7 +168,7 @@ namespace Gamification.Controllers
                 }
                 catch (DbEntityValidationException ex)
                 {
-
+                    //For debugging reasons has no effect on the app
                     foreach (var entityValidationErrors in ex.EntityValidationErrors)
                     {
                         foreach (var validationError in entityValidationErrors.ValidationErrors)
