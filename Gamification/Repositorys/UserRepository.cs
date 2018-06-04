@@ -105,18 +105,21 @@ namespace Gamification.Repositorys
 
         public List<Users> GetLeaderBoardByNameAndCountry(List<Users> LeaderBoard, string SearchString, int? SearchCountry)
         {
-            return (from u in LeaderBoard where (u.First_Name.Contains(SearchString) || u.Last_Name.Contains(SearchString) || u.Username.Contains(SearchString)) && u.Countries.CountryID.Equals(SearchCountry) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
+            SearchString = SearchString.ToUpper();
+            return (from u in LeaderBoard where (u.First_Name.ToUpper().Contains(SearchString) || u.Last_Name.ToUpper().Contains(SearchString) || u.Username.ToUpper().Contains(SearchString)) && u.Countries.CountryID.Equals(SearchCountry) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
             
         }
 
         public List<Users> GetLeaderBoardByCountry(List<Users> LeaderBoard, int? SearchCountry)
         {
+            
             return (from u in LeaderBoard where u.Countries.CountryID.Equals(SearchCountry) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
         }
 
         public List<Users> GetLeaderBoardByName(List<Users> LeaderBoard, string SearchString)
         {
-            return (from u in LeaderBoard where u.First_Name.Contains(SearchString) || u.Last_Name.Contains(SearchString) || u.Username.Contains(SearchString) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
+            SearchString = SearchString.ToUpper();
+            return (from u in LeaderBoard where u.First_Name.ToUpper().Contains(SearchString) || u.Last_Name.ToUpper().Contains(SearchString) || u.Username.ToUpper().Contains(SearchString) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
         }
 
        

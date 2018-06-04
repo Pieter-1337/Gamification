@@ -7,38 +7,111 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Gamification.Models;
+using Gamification.Repositorys;
 
 namespace Gamification.Controllers
 {
     public class CountriesController : Controller
     {
         private GamificationEntities db = new GamificationEntities();
+        private CountryRepository _countryRepository = null;
+
+        public CountriesController()
+        {
+            _countryRepository = new CountryRepository();
+        }
 
         // GET: Countries
         public ActionResult Index()
         {
-            return View(db.Countries.ToList());
+            var CountryList = db.Countries.ToList();
+            if(Session["User"] != null)
+            {
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    int? SearchCountry = null;
+                    if (Request["CountryID"] != null)
+                    {
+                        SearchCountry = Convert.ToInt32(Request["CountryID"]);
+                    }
+
+                    if(Request["SearchByCountryCheckBox"] == "check")
+                    {
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        var searchResult = _countryRepository.SearchByCountry(CountryList, SearchCountry);
+                        return View(searchResult);
+                    }
+                    else
+                    {
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        return View(CountryList);
+                    }
+                  
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+           
         }
 
         // GET: Countries/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+        var UserList = db.Users.ToList();
+            if (Session["User"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    if (id == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    Countries countries = db.Countries.Find(id);
+                    if (countries == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(countries);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            Countries countries = db.Countries.Find(id);
-            if (countries == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(countries);
         }
 
         // GET: Countries/Create
         public ActionResult Create()
         {
-            return View();
+            var UserList = db.Users.ToList();
+            if (Session["User"] != null)
+            {
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // POST: Countries/Create
@@ -48,29 +121,63 @@ namespace Gamification.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CountryID,Name,Abbreviation")] Countries countries)
         {
-            if (ModelState.IsValid)
+            var UserList = db.Users.ToList();
+            if (Session["User"] != null)
             {
-                db.Countries.Add(countries);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+
+                    if (ModelState.IsValid)
+                    {
+                        db.Countries.Add(countries);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    return View(countries);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
             }
 
-            return View(countries);
+            
         }
 
         // GET: Countries/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Session["User"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+
+                    if (id == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    Countries countries = db.Countries.Find(id);
+                    if (countries == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(countries);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            Countries countries = db.Countries.Find(id);
-            if (countries == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(countries);
         }
 
         // POST: Countries/Edit/5
@@ -80,28 +187,58 @@ namespace Gamification.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CountryID,Name,Abbreviation")] Countries countries)
         {
-            if (ModelState.IsValid)
+            if (Session["User"] != null)
             {
-                db.Entry(countries).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    if (ModelState.IsValid)
+                    {
+                        db.Entry(countries).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    return View(countries);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            return View(countries);
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // GET: Countries/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (Session["User"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    if (id == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    Countries countries = db.Countries.Find(id);
+                    if (countries == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(countries);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            Countries countries = db.Countries.Find(id);
-            if (countries == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(countries);
         }
 
         // POST: Countries/Delete/5
@@ -109,10 +246,25 @@ namespace Gamification.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Countries countries = db.Countries.Find(id);
-            db.Countries.Remove(countries);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (Session["User"] != null)
+            {
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    Countries countries = db.Countries.Find(id);
+                    db.Countries.Remove(countries);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         protected override void Dispose(bool disposing)

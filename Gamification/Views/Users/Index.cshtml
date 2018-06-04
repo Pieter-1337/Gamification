@@ -4,11 +4,38 @@
     ViewBag.Title = "Index";
 }
 
+@Html.Partial("AdminUIPartial")
+
+<hr />
+
 <h2>UserList</h2>
 
 <p>
-    @Html.ActionLink("Create New User", "Create", null, new { @class = "btn btn-primary"})
+    @Html.ActionLink("Create New User", "Create", null, new { @class = "btn btn-success" })
 </p>
+
+<hr />
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    <div class="form-inline">
+        <div class="form-group" style="margin-right:25px;">
+            <p><input type="checkbox" name="SearchByNameCheckBox" value="check" checked="checked" style="margin-right: 10px;" />Search by name or username</p>
+            <p><input name="SearchByNameTextBox" class="form-control" style="width: 175px;" placeholder="Enter search request" /></p>
+        </div>
+
+        <div class="form-group" style="margin-right:25px;">
+            <p><input type="checkbox" name="SearchByCountryCheckBox" value="check" style="margin-right: 10px;" />Search by country</p>
+            <p>@Html.DropDownList("CountryID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+        </div>
+
+        <div class="form-group" style="margin-top: 35px;">
+            <p><input name="SearchBtn" class="btn btn-success" type="submit" value="Search" /> </p>
+        </div>
+    </div>
+
+}
+
 <table class="table">
     <tr>
         <th>
@@ -39,47 +66,48 @@
         <th>
             @Html.DisplayNameFor(model => model.CountryID)
         </th>
-      
+
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserID)
-        </td>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserID)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.Username)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.First_Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Last_Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Punten_LVL1)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Punten_LVL2)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Divisions.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Countries.Name)
-        </td>
-        
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.UserID }, new { @class = "btn btn-primary"}) 
-            @Html.ActionLink("Details", "Details", new { id=item.UserID }, new { @class = "btn btn-warning"}) 
-            @Html.ActionLink("Delete", "Delete", new { id=item.UserID }, new { @class = "btn btn-danger"})
-        </td>
-    </tr>
-}
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.First_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Last_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Punten_LVL1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Punten_LVL2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Divisions.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Countries.Name)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.UserID }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Details", "Details", new { id = item.UserID }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.UserID }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
 
 </table>

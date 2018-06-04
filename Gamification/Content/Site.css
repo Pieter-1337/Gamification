@@ -8257,6 +8257,11 @@ body {
     border-radius: 200px
 }
 
+
+.text-align-right{
+    text-align:right;
+}
+
 @media screen and (max-width: 767px) {
     .btn-sm, .btn-group-sm > .btn {
         padding: 5px 8px
@@ -8495,5 +8500,7 @@ footer {
         margin: 0 0 10px 0 !important
     }
 }
+
+
 
 

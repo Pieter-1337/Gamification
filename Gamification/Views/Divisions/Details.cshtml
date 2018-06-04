@@ -4,6 +4,11 @@
     ViewBag.Title = "Details";
 }
 
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.DivisionID }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>
+
 <h2>Details</h2>
 
 <div>
@@ -28,7 +33,4 @@
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.DivisionID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+

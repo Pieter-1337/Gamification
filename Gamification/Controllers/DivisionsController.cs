@@ -7,38 +7,109 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Gamification.Models;
+using Gamification.Repositorys;
 
 namespace Gamification.Controllers
 {
     public class DivisionsController : Controller
     {
         private GamificationEntities db = new GamificationEntities();
+        private DivisionRepository _divisionRepository = null;
+
+        public DivisionsController()
+        {
+            _divisionRepository = new DivisionRepository();
+        }
 
         // GET: Divisions
         public ActionResult Index()
         {
-            return View(db.Divisions.ToList());
+            var DivisionList = db.Divisions.ToList();
+            if (Session["User"] != null)
+            {
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    int? SearchDivision = null;
+                    if (Request["DivisionID"] != null)
+                    {
+                        SearchDivision = Convert.ToInt32(Request["DivisionID"]);
+                    }
+
+                    if (Request["SearchByDivisionCheckBox"] == "check")
+                    {
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(c => c.Text);
+                        var searchResult = _divisionRepository.SearchByDivision(DivisionList, SearchDivision);
+                        return View(searchResult);
+                    }
+                    else
+                    {
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(c => c.Text);
+                        return View(DivisionList);
+                    }
+
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
 
         // GET: Divisions/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            if (Session["User"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    if (id == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    Divisions divisions = db.Divisions.Find(id);
+                    if (divisions == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(divisions);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            Divisions divisions = db.Divisions.Find(id);
-            if (divisions == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(divisions);
         }
 
         // GET: Divisions/Create
         public ActionResult Create()
         {
-            return View();
+            if (Session["User"] != null)
+            {
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+               return RedirectToAction("Index", "Home");
+            }
         }
 
         // POST: Divisions/Create
@@ -48,29 +119,58 @@ namespace Gamification.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "DivisionID,Name,Abbreviation")] Divisions divisions)
         {
-            if (ModelState.IsValid)
+            if (Session["User"] != null)
             {
-                db.Divisions.Add(divisions);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    if (ModelState.IsValid)
+                    {
+                        db.Divisions.Add(divisions);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    return View(divisions);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-
-            return View(divisions);
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // GET: Divisions/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Session["User"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    if (id == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    Divisions divisions = db.Divisions.Find(id);
+                    if (divisions == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(divisions);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            Divisions divisions = db.Divisions.Find(id);
-            if (divisions == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(divisions);
         }
 
         // POST: Divisions/Edit/5
@@ -80,28 +180,58 @@ namespace Gamification.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "DivisionID,Name,Abbreviation")] Divisions divisions)
         {
-            if (ModelState.IsValid)
+            if (Session["User"] != null)
             {
-                db.Entry(divisions).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    if (ModelState.IsValid)
+                    {
+                        db.Entry(divisions).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    return View(divisions);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            return View(divisions);
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // GET: Divisions/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (Session["User"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    if (id == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    Divisions divisions = db.Divisions.Find(id);
+                    if (divisions == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(divisions);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            Divisions divisions = db.Divisions.Find(id);
-            if (divisions == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(divisions);
         }
 
         // POST: Divisions/Delete/5
@@ -109,10 +239,25 @@ namespace Gamification.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Divisions divisions = db.Divisions.Find(id);
-            db.Divisions.Remove(divisions);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (Session["User"] != null)
+            {
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    Divisions divisions = db.Divisions.Find(id);
+                    db.Divisions.Remove(divisions);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         protected override void Dispose(bool disposing)

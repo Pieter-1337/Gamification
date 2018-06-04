@@ -32,12 +32,20 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-success" />
+                @if (Session["User"] != null)
+                {
+                     var user = (Gamification.Models.Users)Session["User"];
+                     if (user.Role == "Admin")
+                     {
+                        @Html.ActionLink("Back To List","Index", "Divisions", null, new { @class = "btn btn-primary" })
+                     }
+                }
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", null , new { @class = "btn btn-primary"})
 </div>

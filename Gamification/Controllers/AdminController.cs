@@ -16,7 +16,23 @@ namespace Gamification.Controllers
 
         public ActionResult AdminUI()
         {
-            return RedirectToAction("Index", "Users");
+            if(Session["User"] != null)
+            {
+                var user = (Gamification.Models.Users)Session["User"];
+                if(user.Role == "Admin")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
     }
 }

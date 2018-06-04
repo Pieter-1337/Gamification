@@ -24,10 +24,11 @@ namespace Gamification.Controllers
 
         public ActionResult Index()
         {
-            var LeaderBoard = _userRepository.GetLeaderBoard().ToList();
+            
             _divisionRepository.LoadDivisions();
             _countryRepository.LoadCountries();
             _userRepository.LoadAdmins();
+            var LeaderBoard = _userRepository.GetLeaderBoard().ToList();
             string SearchString = null;
             int? SearchCountry = null;
 

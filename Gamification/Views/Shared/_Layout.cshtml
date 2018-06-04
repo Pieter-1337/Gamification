@@ -34,7 +34,7 @@
                         <li>@Html.ActionLink(user.Username, "Details", "Users", new { id = user.UserID}, null)</li>
                         if (user.Role == "Admin")
                         {
-                        <li>@Html.ActionLink("Fill in Points", "AdminUI", "Admin")</li>
+                        <li>@Html.ActionLink("AdminPanel", "AdminUI", "Admin")</li>
                         }
                         <li>@Html.ActionLink("Logout", "Logout", "Home")</li>
                     }

@@ -24,5 +24,10 @@ namespace Gamification.Repositorys
                 db.SaveChanges();
             }
         }
+
+        public List<Divisions> SearchByDivision(List<Divisions> DivisionList, int? SearchDivision)
+        {
+            return (from d in DivisionList where d.DivisionID.Equals(SearchDivision) orderby d.Name select d).ToList();
+        }
     }
 }

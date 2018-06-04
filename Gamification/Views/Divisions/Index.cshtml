@@ -4,11 +4,34 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+@Html.Partial("AdminUIPartial")
+
+<hr />
+
+<h2>Division List</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New Division", "Create", null, new { @class = "btn btn-success" })
 </p>
+
+<hr />
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    <div class="form-inline">
+
+        <div class="form-group" style="margin-right:25px;">
+            <p><input type="checkbox" name="SearchByDivisionCheckBox" value="check" checked="checked" style="margin-right: 10px;" />Search by Division</p>
+            <p>@Html.DropDownList("DivisionID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+        </div>
+
+        <div class="form-group" style="margin-top: 35px;">
+            <p><input name="SearchBtn" class="btn btn-success" type="submit" value="Search" /> </p>
+        </div>
+    </div>
+
+}
+
 <table class="table">
     <tr>
         <th>
@@ -20,20 +43,21 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Abbreviation)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.DivisionID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.DivisionID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.DivisionID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Abbreviation)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.DivisionID }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Details", "Details", new { id = item.DivisionID }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.DivisionID }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
 
 </table>

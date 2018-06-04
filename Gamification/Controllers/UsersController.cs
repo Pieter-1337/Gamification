@@ -26,11 +26,51 @@ namespace Gamification.Controllers
         // GET: Users
         public ActionResult Index()
         {
+            var UserList = db.Users.ToList();
             if (Session["User"] != null)
             {
                 var user = (Gamification.Models.Users)Session["User"];
                 if (user.Role == "Admin")
                 {
+                    string SearchString = null;
+                    int? SearchCountry = null;
+
+                    if (Request["SearchByNameTextBox"] != null)
+                    {
+                        SearchString = Request["SearchByNameTextBox"].ToString();
+                    }
+
+                    if (Request["CountryID"] != null)
+                    {
+                        SearchCountry = Convert.ToInt32(Request["CountryID"]);
+                    }
+
+                    //Search by Name & Username & Country
+                    if (Request["SearchByNameTextBox"] != null && Request["SearchByNameCheckBox"] == "check" && Request["SearchByCountryCheckBox"] == "check")
+                    {
+                        var searchResult = _userRepository.GetLeaderBoardByNameAndCountry(UserList, SearchString, SearchCountry);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        return View(searchResult);
+                    }
+
+                    //Search by Name & Username
+                    if (Request["SearchByNameTextBox"] != null && Request["SearchByNameCheckBox"] == "check")
+                    {
+
+                        var searchResult = _userRepository.GetLeaderBoardByName(UserList, SearchString);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        return View(searchResult);
+                    }
+
+                    //Search by Country
+                    if (Request["SearchByCountryCheckBox"] == "check")
+                    {
+
+                        var searchResult = _userRepository.GetLeaderBoardByCountry(UserList, SearchCountry);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        return View(searchResult);
+                    }
+                    ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
                     return View(db.Users.ToList());
                 }
                 else
@@ -48,16 +88,32 @@ namespace Gamification.Controllers
         // GET: Users/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            if (Session["User"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin" || user.UserID == Convert.ToInt32(id))
+                {   
+                    Users users = db.Users.Find(id);
+                    if (users == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(users);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            Users users = db.Users.Find(id);
-            if (users == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(users);
         }
 
         // GET: Users/Create
@@ -128,18 +184,34 @@ namespace Gamification.Controllers
         // GET: Users/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Session["User"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin" || user.UserID == Convert.ToInt32(id))
+                {
+                    Users users = db.Users.Find(id);
+                    if (users == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name", users.DivisionID).OrderBy(d => d.Text);
+                    ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name", users.CountryID).OrderBy(c => c.Text);
+                    return View(users);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            Users users = db.Users.Find(id);
-            if (users == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
-            ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
-            return View(users);
         }
 
         // POST: Users/Edit/5
@@ -149,79 +221,125 @@ namespace Gamification.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "UserID,Username,Email,First_Name,Last_Name,Punten_LVL1,Punten_LVL2,DivisionID,CountryID")] Users users)
         {
-            ModelState.Remove("Password");
-            ModelState.Remove("ConfirmPassword");
-            ModelState.Remove("Role");
-            var extraUserInfo = _userRepository.GetUserById(users.UserID);
-
-            if (ModelState.IsValid)
+            if (Session["User"] != null)
             {
-               
-                users.Password = extraUserInfo.Password;
-                users.ConfirmPassword = extraUserInfo.ConfirmPassword;
-                users.Role = extraUserInfo.Role;
-                
-                db.Entry(users).State = EntityState.Modified;
-                try
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin" || user.UserID == users.UserID)
                 {
-                    db.SaveChanges();
-                }
-                catch (DbEntityValidationException ex)
-                {
-                    //For debugging reasons has no effect on the app
-                    foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                    ModelState.Remove("Username");
+                    ModelState.Remove("Password");
+                    ModelState.Remove("ConfirmPassword");
+                    ModelState.Remove("Role");
+                    var extraUserInfo = _userRepository.GetUserById(users.UserID);
+
+                    if (ModelState.IsValid)
                     {
-                        foreach (var validationError in entityValidationErrors.ValidationErrors)
+                        users.Username = extraUserInfo.Username;
+                        users.Password = extraUserInfo.Password;
+                        users.ConfirmPassword = extraUserInfo.ConfirmPassword;
+                        users.Role = extraUserInfo.Role;
+
+                        db.Entry(users).State = EntityState.Modified;
+                        try
                         {
-                            Response.Write("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
+                            db.SaveChanges();
                         }
+                        catch (DbEntityValidationException ex)
+                        {
+                            //For debugging reasons has no effect on the app
+                            foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                            {
+                                foreach (var validationError in entityValidationErrors.ValidationErrors)
+                                {
+                                    Response.Write("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
+                                }
+                            }
+
+                            ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                            ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                            return View(users);
+                        }
+                        return RedirectToAction("Index");
                     }
-
-
                     ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
                     ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
                     return View(users);
-
                 }
-
-                return RedirectToAction("Index");
-
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-
-            ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
-            ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
-            return View(users);
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // GET: Users/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (Session["User"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin" || user.UserID == Convert.ToInt32(id))
+                {
+                    Users users = db.Users.Find(id);
+                    if (users == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(users);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            Users users = db.Users.Find(id);
-            if (users == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(users);
         }
 
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int? id)
         {
-            Users users = db.Users.Find(id);
-            db.Users.Remove(users);
-            db.SaveChanges();
-            var user = (Gamification.Models.Users)Session["User"];
-            if (user.Role == "User")
+            if (Session["User"] != null)
             {
-                Session.Remove("User");
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin" || user.UserID == Convert.ToInt32(id))
+                {
+                    Users users = db.Users.Find(id);
+                    db.Users.Remove(users);
+                    db.SaveChanges();
+                    if (user.Role == "User")
+                    {
+                        Session.Remove("User");
+                    }
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            return RedirectToAction("Index");
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         protected override void Dispose(bool disposing)

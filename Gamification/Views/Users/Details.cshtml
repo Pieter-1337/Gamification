@@ -4,6 +4,11 @@
     ViewBag.Title = "Details";
 }
 
+<p>
+    @Html.ActionLink("Edit", "Edit", "Users", new { id = Model.UserID }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Delete", "Delete", "Users", new { id = Model.UserID }, new { @class = "btn btn-danger" })
+</p>
+
 <h2>Details</h2>
 
 <div>
@@ -74,15 +79,8 @@
             @Html.DisplayFor(model => model.Countries.Name)
         </dd>
 
-       
-
-        @*<dd>
-            @Html.DisplayFor(model => model.Password)
-        </dd>*@
-
     </dl>
+
+  
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", "Users", new { id = Model.UserID }, new { @class = "btn btn-warning"})
-    @Html.ActionLink("Delete", "Delete", "Users", new { id = Model.UserID}, new { @class = "btn btn-danger" })
-</p>
+
