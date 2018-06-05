@@ -34,15 +34,39 @@ namespace Gamification.Controllers
                 {
                     string SearchString = null;
                     int? SearchCountry = null;
+                    int? SearchDivision = null;
 
                     if (Request["SearchByNameTextBox"] != null)
                     {
                         SearchString = Request["SearchByNameTextBox"].ToString();
                     }
+                   
 
                     if (Request["CountryID"] != null)
                     {
                         SearchCountry = Convert.ToInt32(Request["CountryID"]);
+                    }
+                    
+
+                    if(Request["DivisionID"] != null)
+                    {
+                        SearchDivision = Convert.ToInt32(Request["DivisionID"]);
+                    }
+                    
+
+                    //Search by Name/Username & Country & Division
+                    if (Request["SearchByNameTextBox"] != null && Request["SearchByNameCheckBox"] == "check" && Request["SearchByCountryCheckBox"] == "check" && Request["SearchByDivisionCheckBox"] == "check")
+                    {
+                        var searchResult = _userRepository.GetLeaderBoardByNameAndCountryAndDivision(UserList, SearchString, SearchCountry, SearchDivision);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
+                        return View(searchResult);
                     }
 
                     //Search by Name & Username & Country
@@ -50,15 +74,75 @@ namespace Gamification.Controllers
                     {
                         var searchResult = _userRepository.GetLeaderBoardByNameAndCountry(UserList, SearchString, SearchCountry);
                         ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
                         return View(searchResult);
                     }
 
+                    //Search by Name/Username & Division
+                    if (Request["SearchByNameTextBox"] != null && Request["SearchByNameCheckBox"] == "check" && Request["SearchByDivisionCheckBox"] == "check")
+                    {
+                        var searchResult = _userRepository.GetLeaderBoardByNameAndDivision(UserList, SearchString, SearchDivision);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
+                        return View(searchResult);
+                    }
+
+                    //Search by Country & Division
+                    if(Request["SearchByCountryCheckBox"] == "check" && Request["SearchByDivisionCheckBox"] == "check")
+                    {
+                        var searchResult = _userRepository.GetLeaderBoardByCountryAndDivision(UserList, SearchCountry, SearchDivision);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
+                        return View(searchResult);
+                    }
+
+                    //Search by Division
+                    if(Request["SearchByDivisionCheckBox"] == "check")
+                    {
+                        var searchResult = _userRepository.GetLeaderBoardByDivision(UserList, SearchDivision);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
+                        return View(searchResult);
+                    }
+
+                 
                     //Search by Name & Username
                     if (Request["SearchByNameTextBox"] != null && Request["SearchByNameCheckBox"] == "check")
                     {
 
                         var searchResult = _userRepository.GetLeaderBoardByName(UserList, SearchString);
                         ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
                         return View(searchResult);
                     }
 
@@ -68,9 +152,18 @@ namespace Gamification.Controllers
 
                         var searchResult = _userRepository.GetLeaderBoardByCountry(UserList, SearchCountry);
                         ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
                         return View(searchResult);
                     }
+
                     ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                    ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
                     return View(db.Users.ToList());
                 }
                 else

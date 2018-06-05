@@ -99,8 +99,30 @@ namespace Gamification.Repositorys
 
         public List<Users> GetLeaderBoard()
         {
-            var query = (from user in db.Users orderby (user.Punten_LVL1 + user.Punten_LVL2) descending select user).ToList();
+            var query = (from user in db.Users where user.Role != "Admin" orderby (user.Punten_LVL1 + user.Punten_LVL2) descending select user).ToList();
             return query;
+        }
+
+        public List<Users> GetLeaderBoardByNameAndCountryAndDivision(List<Users> LeaderBoard, string SearchString, int? SearchCountry, int? SearchDivision)
+        {
+            SearchString = SearchString.ToUpper();
+            return (from u in LeaderBoard where (u.First_Name.ToUpper().Contains(SearchString) || u.Last_Name.ToUpper().Contains(SearchString) || u.Username.ToUpper().Contains(SearchString)) && u.Countries.CountryID.Equals(SearchCountry) && u.Divisions.DivisionID.Equals(SearchDivision) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
+        }
+
+        public List<Users> GetLeaderBoardByNameAndDivision(List<Users> LeaderBoard, string SearchString, int? SearchDivision)
+        {
+            SearchString = SearchString.ToUpper();
+            return (from u in LeaderBoard where (u.First_Name.ToUpper().Contains(SearchString) || u.Last_Name.ToUpper().Contains(SearchString) || u.Username.ToUpper().Contains(SearchString)) && u.Divisions.DivisionID.Equals(SearchDivision) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList(); 
+        }
+
+        public List<Users> GetLeaderBoardByCountryAndDivision(List<Users> LeaderBoard, int? SearchCountry, int? SearchDivision)
+        {
+            return (from u in LeaderBoard where (u.Countries.CountryID.Equals(SearchCountry) && u.Divisions.DivisionID.Equals(SearchDivision)) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
+        }
+
+        public List<Users> GetLeaderBoardByDivision(List<Users> LeaderBoard, int? SearchDivision)
+        {
+            return (from u in LeaderBoard where u.Divisions.DivisionID.Equals(SearchDivision) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
         }
 
         public List<Users> GetLeaderBoardByNameAndCountry(List<Users> LeaderBoard, string SearchString, int? SearchCountry)
@@ -121,6 +143,9 @@ namespace Gamification.Repositorys
             SearchString = SearchString.ToUpper();
             return (from u in LeaderBoard where u.First_Name.ToUpper().Contains(SearchString) || u.Last_Name.ToUpper().Contains(SearchString) || u.Username.ToUpper().Contains(SearchString) orderby (u.Punten_LVL1 + u.Punten_LVL2) descending select u).ToList();
         }
+     
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
        
         //Check if a Username is already taken when someone registers or creates a new user
