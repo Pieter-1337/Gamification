@@ -262,8 +262,8 @@ namespace Gamification.Controllers
                         else
                         {
                             Session["User"] = user;
-                            TempData["UserCreated"] = "User " + user.First_Name + " " + user.Last_Name + " was succesfully created";
-                            return RedirectToAction("Index", "Users", null);
+                            TempData["LoginValid"] = "Welcome " + user.First_Name + " " + user.Last_Name;
+                            return RedirectToAction("Index", "Home", null);
                         }
                     }
                     else
