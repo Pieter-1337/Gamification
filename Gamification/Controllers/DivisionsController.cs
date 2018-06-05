@@ -39,13 +39,13 @@ namespace Gamification.Controllers
                     if (Request["SearchByDivisionCheckBox"] == "check")
                     {
                         ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(c => c.Text);
-                        var searchResult = _divisionRepository.SearchByDivision(DivisionList, SearchDivision);
+                        var searchResult = _divisionRepository.SearchByDivision(DivisionList, SearchDivision).OrderBy(d => d.Name); 
                         return View(searchResult);
                     }
                     else
                     {
                         ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(c => c.Text);
-                        return View(DivisionList);
+                        return View(DivisionList.OrderBy(d => d.Name));
                     }
 
                 }

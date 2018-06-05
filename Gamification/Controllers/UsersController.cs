@@ -34,15 +34,39 @@ namespace Gamification.Controllers
                 {
                     string SearchString = null;
                     int? SearchCountry = null;
+                    int? SearchDivision = null;
 
                     if (Request["SearchByNameTextBox"] != null)
                     {
                         SearchString = Request["SearchByNameTextBox"].ToString();
                     }
+                   
 
                     if (Request["CountryID"] != null)
                     {
                         SearchCountry = Convert.ToInt32(Request["CountryID"]);
+                    }
+                    
+
+                    if(Request["DivisionID"] != null)
+                    {
+                        SearchDivision = Convert.ToInt32(Request["DivisionID"]);
+                    }
+                    
+
+                    //Search by Name/Username & Country & Division
+                    if (Request["SearchByNameTextBox"] != null && Request["SearchByNameCheckBox"] == "check" && Request["SearchByCountryCheckBox"] == "check" && Request["SearchByDivisionCheckBox"] == "check")
+                    {
+                        var searchResult = _userRepository.GetLeaderBoardByNameAndCountryAndDivision(UserList, SearchString, SearchCountry, SearchDivision);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
+                        return View(searchResult);
                     }
 
                     //Search by Name & Username & Country
@@ -50,15 +74,75 @@ namespace Gamification.Controllers
                     {
                         var searchResult = _userRepository.GetLeaderBoardByNameAndCountry(UserList, SearchString, SearchCountry);
                         ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
                         return View(searchResult);
                     }
 
+                    //Search by Name/Username & Division
+                    if (Request["SearchByNameTextBox"] != null && Request["SearchByNameCheckBox"] == "check" && Request["SearchByDivisionCheckBox"] == "check")
+                    {
+                        var searchResult = _userRepository.GetLeaderBoardByNameAndDivision(UserList, SearchString, SearchDivision);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
+                        return View(searchResult);
+                    }
+
+                    //Search by Country & Division
+                    if(Request["SearchByCountryCheckBox"] == "check" && Request["SearchByDivisionCheckBox"] == "check")
+                    {
+                        var searchResult = _userRepository.GetLeaderBoardByCountryAndDivision(UserList, SearchCountry, SearchDivision);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
+                        return View(searchResult);
+                    }
+
+                    //Search by Division
+                    if(Request["SearchByDivisionCheckBox"] == "check")
+                    {
+                        var searchResult = _userRepository.GetLeaderBoardByDivision(UserList, SearchDivision);
+                        ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
+                        return View(searchResult);
+                    }
+
+                 
                     //Search by Name & Username
                     if (Request["SearchByNameTextBox"] != null && Request["SearchByNameCheckBox"] == "check")
                     {
 
                         var searchResult = _userRepository.GetLeaderBoardByName(UserList, SearchString);
                         ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
                         return View(searchResult);
                     }
 
@@ -68,9 +152,18 @@ namespace Gamification.Controllers
 
                         var searchResult = _userRepository.GetLeaderBoardByCountry(UserList, SearchCountry);
                         ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                        ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                        if (searchResult.Count() == 0)
+                        {
+
+                            TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                        }
                         return View(searchResult);
                     }
+
                     ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                    ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
                     return View(db.Users.ToList());
                 }
                 else
@@ -150,12 +243,18 @@ namespace Gamification.Controllers
                         db.SaveChanges();
 
                         var user = _userRepository.GetUser(username, password);
-                        if (user != null)
+                        var admin = (Gamification.Models.Users)Session["User"];
+                        if (user != null && admin.Role != "Admin")
                         {
                             Session["User"] = user;
 
                             TempData["LoginValid"] = "Welcome " + user.First_Name + " " + user.Last_Name;
                             return RedirectToAction("Index", "Home", null);
+                        }
+                        else
+                        {
+                            TempData["UserCreated"] = "User " + user.First_Name + " " + user.Last_Name + " was succesfully created";
+                            return RedirectToAction("Index", "Users", null);
                         }
                     }
                     else
@@ -276,6 +375,69 @@ namespace Gamification.Controllers
             }
         }
 
+        public ActionResult EditPassword(int? id)
+        {
+            if(Session["User"] != null)
+            {
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                var user = (Gamification.Models.Users)Session["User"];
+                if(user.UserID == Convert.ToInt32(id))
+                {
+                    
+                    return View(user);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult EditPasswordConfirm(int? id)
+        {
+            if (Session["User"] != null)
+            {
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.UserID == Convert.ToInt32(id))
+                {
+                    if((Request["OldPassword"] != null) && (Request["NewPassword"] != null))
+                    {
+                        if(_userRepository.UpdatePassword(Convert.ToInt32(id), Request["Oldpassword"].ToString(), Request["NewPassword"].ToString()))
+                        {
+                            TempData["PassChanged"] = "Password succesfully changed";
+                            return RedirectToAction("Details", "Users", new { id = user.UserID}) ; //Update passed
+                        }
+                        else
+                        {
+                            TempData["PassChanged"] = "Password failed to Update";
+                            return View();
+                        }
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+      
         // GET: Users/Delete/5
         public ActionResult Delete(int? id)
         {

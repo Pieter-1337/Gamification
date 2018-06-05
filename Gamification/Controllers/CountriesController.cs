@@ -39,13 +39,13 @@ namespace Gamification.Controllers
                     if(Request["SearchByCountryCheckBox"] == "check")
                     {
                         ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
-                        var searchResult = _countryRepository.SearchByCountry(CountryList, SearchCountry);
+                        var searchResult = _countryRepository.SearchByCountry(CountryList, SearchCountry).OrderBy(c => c.Name);
                         return View(searchResult);
                     }
                     else
                     {
                         ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
-                        return View(CountryList);
+                        return View(CountryList.OrderBy(c => c.Name));
                     }
                   
                 }

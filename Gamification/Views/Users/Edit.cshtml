@@ -18,7 +18,7 @@
     {
         <div class="text-align-right">
             @Html.ActionLink("Back to UserList", "Index", "Users", null, new { @class = "btn btn-primary" })
-            @Html.ActionLink("Back to UserDetail", "Details", "Users", new { id = user.UserID }, new { @class = "btn btn-info" })
+            @Html.ActionLink("Back to UserDetail", "Details", "Users", new { id = Model.UserID }, new { @class = "btn btn-info" })
         </div>
     }
     else
@@ -64,7 +64,7 @@
     </div>
 
 
-    @if (user.Role == "Admin")
+    @if (user.Role == "Admin" && Model.Role != "Admin")
     {
         <div class="form-group">
             @Html.LabelFor(model => model.Punten_LVL1, htmlAttributes: new { @class = "control-label col-md-2" })

@@ -21,7 +21,7 @@ namespace Gamification.Controllers
                 var user = (Gamification.Models.Users)Session["User"];
                 if(user.Role == "Admin")
                 {
-                    return View();
+                    return RedirectToAction("Index", "Users");
                 }
                 else
                 {

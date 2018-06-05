@@ -47,6 +47,12 @@ namespace Gamification.Controllers
             {
                 var searchResult = _userRepository.GetLeaderBoardByNameAndCountry(LeaderBoard, SearchString, SearchCountry);
                 ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                if(searchResult.Count() == 0)
+                {
+                  
+                  TempData["UserListResult"] = "No results that match your search criteria where found";
+                    
+                }
                 return View(searchResult);
             }
 
@@ -56,6 +62,12 @@ namespace Gamification.Controllers
 
                 var searchResult = _userRepository.GetLeaderBoardByName(LeaderBoard, SearchString);
                 ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                if (searchResult.Count() == 0)
+                {
+
+                    TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                }
                 return View(searchResult);
             }
 
@@ -65,6 +77,12 @@ namespace Gamification.Controllers
 
                 var searchResult = _userRepository.GetLeaderBoardByCountry(LeaderBoard, SearchCountry);
                 ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                if (searchResult.Count() == 0)
+                {
+
+                    TempData["UserListResult"] = "No results that match your search criteria where found";
+
+                }
                 return View(searchResult);
             }
 

@@ -8,6 +8,10 @@
 
 <hr />
 
+@if(TempData["UserCreated"] != null){
+    <div class="alert alert-success">@TempData["UserCreated"]</div>
+}
+
 <h2>UserList</h2>
 
 <p>
@@ -18,21 +22,26 @@
 
 @using (Html.BeginForm(FormMethod.Post))
 {
-    <div class="form-inline">
-        <div class="form-group" style="margin-right:25px;">
-            <p><input type="checkbox" name="SearchByNameCheckBox" value="check" checked="checked" style="margin-right: 10px;" />Search by name or username</p>
-            <p><input name="SearchByNameTextBox" class="form-control" style="width: 175px;" placeholder="Enter search request" /></p>
-        </div>
-
-        <div class="form-group" style="margin-right:25px;">
-            <p><input type="checkbox" name="SearchByCountryCheckBox" value="check" style="margin-right: 10px;" />Search by country</p>
-            <p>@Html.DropDownList("CountryID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
-        </div>
-
-        <div class="form-group" style="margin-top: 35px;">
-            <p><input name="SearchBtn" class="btn btn-success" type="submit" value="Search" /> </p>
-        </div>
+<div class="form-inline">
+    <div class="form-group" style="margin-right:25px;">
+        <p><input type="checkbox" name="SearchByNameCheckBox" value="check" checked="checked" style="margin-right: 10px;" />Search by name or username</p>
+        <p><input name="SearchByNameTextBox" class="form-control" style="width: 175px;" placeholder="Enter search request" /></p>
     </div>
+
+    <div class="form-group" style="margin-right:25px;">
+        <p><input type="checkbox" name="SearchByCountryCheckBox" value="check" style="margin-right: 10px;" />Search by country</p>
+        <p>@Html.DropDownList("CountryID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+    </div>
+
+    <div class="form-group" style="margin-right:25px;">
+        <p><input type="checkbox" name="SearchByDivisionCheckBox" value="check" style="margin-right: 10px;" />Search by division</p>
+        <p>@Html.DropDownList("DivisionID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+    </div>
+
+    <div class="form-group" style="margin-top: 35px;">
+        <p><input name="SearchBtn" class="btn btn-success" type="submit" value="Search" /> </p>
+    </div>
+</div>
 
 }
 
@@ -80,7 +89,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Username)
             </td>
-            <td>
+            <td style="max-width: 100px; overflow:hidden;">
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
@@ -111,3 +120,8 @@
     }
 
 </table>
+
+@if(TempData["UserListResult"] != null)
+{
+    <div class="alert alert-danger-message">@TempData["UserListResult"]</div>
+}
