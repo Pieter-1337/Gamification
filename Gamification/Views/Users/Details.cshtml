@@ -11,6 +11,11 @@
 
 <h2>Details</h2>
 
+@if (TempData["PassChanged"] != null)
+{
+    <div class="alert alert-success">@TempData["PassChanged"]</div>
+}
+
 <div>
     <h4>@Model.Username</h4>
     <hr />
@@ -81,6 +86,6 @@
 
     </dl>
 
-  
+
 </div>
 

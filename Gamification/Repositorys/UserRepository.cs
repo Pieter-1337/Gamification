@@ -164,5 +164,24 @@ namespace Gamification.Repositorys
             }       
          
         }
+
+        //Check if old pass matches the one in the db if true replace it with new pass
+        //////////////////////////////////////////////////////////////////////////
+        public bool UpdatePassword(int id, string Oldpassword, string Newpassword)
+        {
+            var user = GetUserById(id);
+            if(BCrypt.Net.BCrypt.Verify(Oldpassword, user.Password))
+            {
+                var EncryptedPass = BCrypt.Net.BCrypt.HashPassword(Newpassword);
+                user.Password = EncryptedPass;
+                user.ConfirmPassword = EncryptedPass;
+                db.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

@@ -375,6 +375,69 @@ namespace Gamification.Controllers
             }
         }
 
+        public ActionResult EditPassword(int? id)
+        {
+            if(Session["User"] != null)
+            {
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                var user = (Gamification.Models.Users)Session["User"];
+                if(user.UserID == Convert.ToInt32(id))
+                {
+                    
+                    return View(user);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult EditPasswordConfirm(int? id)
+        {
+            if (Session["User"] != null)
+            {
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.UserID == Convert.ToInt32(id))
+                {
+                    if((Request["OldPassword"] != null) && (Request["NewPassword"] != null))
+                    {
+                        if(_userRepository.UpdatePassword(Convert.ToInt32(id), Request["Oldpassword"].ToString(), Request["NewPassword"].ToString()))
+                        {
+                            TempData["PassChanged"] = "Password succesfully changed";
+                            return RedirectToAction("Details", "Users", new { id = user.UserID}) ; //Update passed
+                        }
+                        else
+                        {
+                            TempData["PassChanged"] = "Password failed to Update";
+                            return View();
+                        }
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+      
         // GET: Users/Delete/5
         public ActionResult Delete(int? id)
         {
