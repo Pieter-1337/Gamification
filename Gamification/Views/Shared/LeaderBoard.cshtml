@@ -8,6 +8,9 @@
 <div class="row">
 
     <h3>LeaderBoard</h3>
+
+
+
     @using (Html.BeginForm(FormMethod.Post))
     {
         <div class="form-inline">
@@ -24,7 +27,7 @@
             <div class="form-group" style="margin-top: 35px;">
                 <p><input name="SearchBtn" class="btn btn-success" type="submit" value="Search" /> </p>
             </div>
-         </div>
+        </div>
 
     }
     <table class="table" style="margin-top: 25px;">
@@ -39,6 +42,7 @@
             <th>Points Level2</th>
             <th>Total Points</th>
         </tr>
+
 
 
         @foreach (var user in Model)
@@ -60,4 +64,8 @@
         }
 
     </table>
+    @if (TempData["UserListResult"] != null)
+    {
+        <div class="alert alert-danger-message">@TempData["UserListResult"]</div>
+    }
 </div>

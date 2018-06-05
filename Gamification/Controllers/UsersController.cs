@@ -150,12 +150,18 @@ namespace Gamification.Controllers
                         db.SaveChanges();
 
                         var user = _userRepository.GetUser(username, password);
-                        if (user != null)
+                        var admin = (Gamification.Models.Users)Session["User"];
+                        if (user != null && admin.Role != "Admin")
                         {
                             Session["User"] = user;
 
                             TempData["LoginValid"] = "Welcome " + user.First_Name + " " + user.Last_Name;
                             return RedirectToAction("Index", "Home", null);
+                        }
+                        else
+                        {
+                            TempData["UserCreated"] = "User " + user.First_Name + " " + user.Last_Name + " was succesfully created";
+                            return RedirectToAction("Index", "Users", null);
                         }
                     }
                     else

@@ -5527,6 +5527,10 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
     
 }
 
+.alert-danger-message{
+    background-color:red;
+}
+
     .alert-danger hr {
         border-top-color: transparent
     }

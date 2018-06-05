@@ -8,6 +8,10 @@
 
 <hr />
 
+@if(TempData["UserCreated"] != null){
+    <div class="alert alert-success">@TempData["UserCreated"]</div>
+}
+
 <h2>UserList</h2>
 
 <p>

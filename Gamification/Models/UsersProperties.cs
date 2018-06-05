@@ -26,9 +26,11 @@ namespace Gamification.Models
 
         
         [Display(Name = "Points Level 1")]
+        [Range(0, 9999999, ErrorMessage = "Points below zero are not allowed")]
         public Nullable<int> Punten_LVL1 { get; set; }
 
         [Display(Name = "Points Level 2")]
+        [Range(0, 9999999, ErrorMessage = "Points below zero are not allowed")]
         public Nullable<int> Punten_LVL2 { get; set; }
 
         [Display(Name = "Division")]
