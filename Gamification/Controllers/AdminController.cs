@@ -34,5 +34,25 @@ namespace Gamification.Controllers
             }
             
         }
+
+        public ActionResult Statistics()
+        {
+            if (Session["User"] != null)
+            {
+                var user = (Gamification.Models.Users)Session["User"];
+                if (user.Role == "Admin")
+                {
+                    return RedirectToAction("Index", "Statistics");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
     }
 }

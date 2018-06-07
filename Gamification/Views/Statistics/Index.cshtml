@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    int TotalRegisteredPerCountry = 0;
+    int TotalRegisteredPerDivision = 0;
+}
+
+<h2>Statistics</h2>
+
+<h2>Number of people registered on the platform:</h2>
+    <p>Whole app: @ViewBag.RegisteredPeopleWholeApp</p> 
+  
+    <p>Per Country:</p> 
+        <table class="table ">
+            <tr>
+                <th>Country</th>
+                <th>Amount</th>
+            </tr>
+            @foreach (var Country in @ViewBag.RegisteredPeoplePerCountry as Dictionary<string, int>)
+            {
+                <tr>
+                    <td>@Country.Key</td>
+                    <td>@Country.Value</td>
+                    @{ TotalRegisteredPerCountry = TotalRegisteredPerCountry + Country.Value; }
+                </tr>
+            }
+                <tr>
+                    <td>Total:</td>
+                    <td>@TotalRegisteredPerCountry</td>
+                </tr>
+        </table>
+
+
+    <p>Per Division:</p>   
+        <table class="table ">
+            <tr>
+                <th>Division</th>
+                <th>Amount</th>
+            </tr>
+            @foreach (var Division in @ViewBag.RegisteredPeoplePerDivision as Dictionary<string, int>)
+            {
+                <tr>
+                    <td>@Division.Key</td>
+                    <td>@Division.Value</td>
+                    @{ TotalRegisteredPerDivision = TotalRegisteredPerDivision + Division.Value; }
+                </tr>
+            }
+            <tr>
+                <td>Total:</td>
+                <td>@TotalRegisteredPerDivision</td>
+            </tr>
+        </table>
+
+<hr />
+
+<H2>Number of people that earned badges:</H2>
+    <p>Whole app:</p> 
+    <p>Level 1:</p> @*Simple Number*@
+    <p>Level 2:</p> @*Simple Number*@
+
+<hr />
+
+<h2>Number of points earned:</h2>
+    <p>Whole app:</p>   @*Simple Number*@
+    <p>Level 1:</p>     @*Simple Number*@
+    <p>Level 2:</p>     @*Simple Number*@
+
+<hr />
+
+<h2></h2>

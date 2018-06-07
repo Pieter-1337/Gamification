@@ -158,6 +158,7 @@
     <Compile Include="Controllers\BadgesController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\DivisionsController.cs" />
+    <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -320,6 +321,7 @@
     <Content Include="Views\Badges\Details.cshtml" />
     <Content Include="Views\Badges\Edit.cshtml" />
     <Content Include="Views\Badges\Index.cshtml" />
+    <Content Include="Views\Statistics\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

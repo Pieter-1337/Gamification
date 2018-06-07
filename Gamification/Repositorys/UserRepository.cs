@@ -183,5 +183,44 @@ namespace Gamification.Repositorys
                 return false;
             }
         }
+
+        //ADMIN STATISTICS PANEL
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        //People registered in the whole app
+        public int RegisteredPeopleWholeApp()
+        {
+            var users = GetUsers();
+            return (from u in users select u).Count();
+        }
+
+        //People registered per country
+        public Dictionary<string, int> RegisteredPeoplePerCountry()
+        {
+            Dictionary<string, int> Mydict = new Dictionary<string, int>(); 
+
+            foreach(var country in db.Countries)
+            {
+                var users = GetUsers();
+                int CountUsersPerCountry = (from u in users where u.CountryID == country.CountryID select u).Count();
+                Mydict.Add(country.Name, CountUsersPerCountry);
+                
+            }
+            return Mydict;         
+        }
+
+        //People registered per division
+        public Dictionary<string , int> RegisteredPeoplePerDivision()
+        {
+            Dictionary<string, int> Mydict = new Dictionary<string, int>();
+
+            foreach(var division in db.Divisions)
+            {
+                var users = GetUsers();
+                int CountUsersPerDivision = (from u in users where u.DivisionID == division.DivisionID select u).Count();
+                Mydict.Add(division.Name, CountUsersPerDivision);
+            }
+            return Mydict;
+        }
     }
 }
