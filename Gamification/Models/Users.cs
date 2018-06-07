@@ -26,8 +26,12 @@ namespace Gamification.Models
         public string Role { get; set; }
         public int DivisionID { get; set; }
         public int CountryID { get; set; }
+        public Nullable<int> BadgeID { get; set; }
     
         public virtual Countries Countries { get; set; }
         public virtual Divisions Divisions { get; set; }
+        public virtual Badge Badges { get; set; }
+        public virtual Users Users1 { get; set; }
+        public virtual Users Users2 { get; set; }
     }
 }

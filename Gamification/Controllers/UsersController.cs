@@ -300,6 +300,7 @@ namespace Gamification.Controllers
                     }
                     ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name", users.DivisionID).OrderBy(d => d.Text);
                     ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name", users.CountryID).OrderBy(c => c.Text);
+                    ViewBag.BadgeID = new SelectList(db.Badges, "BadgeID", "Name", users.BadgeID).OrderBy(b => b.Text);
                     return View(users);
                 }
                 else
@@ -318,7 +319,7 @@ namespace Gamification.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserID,Username,Email,First_Name,Last_Name,Punten_LVL1,Punten_LVL2,DivisionID,CountryID")] Users users)
+        public ActionResult Edit([Bind(Include = "UserID,Username,Email,First_Name,Last_Name,Punten_LVL1,Punten_LVL2,DivisionID,CountryID,BadgeID")] Users users)
         {
             if (Session["User"] != null)
             {
@@ -356,12 +357,14 @@ namespace Gamification.Controllers
 
                             ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
                             ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                            ViewBag.BadgeID = new SelectList(db.Badges, "BadgeID", "Name").OrderBy(b => b.Text);
                             return View(users);
                         }
                         return RedirectToAction("Index");
                     }
                     ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
                     ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
+                    ViewBag.BadgeID = new SelectList(db.Badges, "BadgeID", "Name").OrderBy(b => b.Text);
                     return View(users);
                 }
                 else

@@ -28,5 +28,6 @@ namespace Gamification.Models
         public virtual DbSet<Countries> Countries { get; set; }
         public virtual DbSet<Divisions> Divisions { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Badge> Badges { get; set; }
     }
 }

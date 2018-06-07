@@ -50,5 +50,8 @@ namespace Gamification.Models
         public string ConfirmPassword { get; set; }
 
         public string Role { get; set; }
+
+        [Display(Name = "Badge Level")]
+        public Nullable<int> BadgeID { get; set; }
     }
 }

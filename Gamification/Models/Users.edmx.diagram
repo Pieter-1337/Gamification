@@ -10,6 +10,9 @@
         <EntityTypeShape EntityType="GamificationModel.Users" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="GamificationModel.FK_Users_Countries" ManuallyRouted="false" />
         <AssociationConnector Association="GamificationModel.FK_Users_Divisions" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="GamificationModel.Badge" Width="1.5" PointX="8.5" PointY="2.125" />
+        <AssociationConnector Association="GamificationModel.FK_Users_Badges" />
+        <AssociationConnector Association="GamificationModel.FK_Users_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
