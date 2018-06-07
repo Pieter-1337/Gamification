@@ -7,7 +7,7 @@
 
 @if (TempData["ErrorMessage"] != null)
 {
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    <div class="alert alert-danger-message">@TempData["ErrorMessage"]</div>
 }
 
 @using (Html.BeginForm("Bevestiging", "Home", null, FormMethod.Post, new { @class = "form", role = "form" }))

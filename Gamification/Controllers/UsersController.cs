@@ -244,17 +244,26 @@ namespace Gamification.Controllers
 
                         var user = _userRepository.GetUser(username, password);
                         var admin = (Gamification.Models.Users)Session["User"];
-                        if (user != null && admin.Role != "Admin")
+                        if (user != null && admin != null)
                         {
-                            Session["User"] = user;
+                            if(admin.Role != "Admin")
+                            {
 
-                            TempData["LoginValid"] = "Welcome " + user.First_Name + " " + user.Last_Name;
-                            return RedirectToAction("Index", "Home", null);
+                                Session["User"] = user;
+                                TempData["LoginValid"] = "Welcome " + user.First_Name + " " + user.Last_Name;
+                                return RedirectToAction("Index", "Home", null);
+                            }
+                            else
+                            {
+                                TempData["UserCreated"] = "User " + user.First_Name + " " + user.Last_Name + " was succesfully created";
+                                return RedirectToAction("Index", "Users", null);
+                            }
                         }
                         else
                         {
-                            TempData["UserCreated"] = "User " + user.First_Name + " " + user.Last_Name + " was succesfully created";
-                            return RedirectToAction("Index", "Users", null);
+                            Session["User"] = user;
+                            TempData["LoginValid"] = "Welcome " + user.First_Name + " " + user.Last_Name;
+                            return RedirectToAction("Index", "Home", null);
                         }
                     }
                     else
