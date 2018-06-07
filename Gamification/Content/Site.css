@@ -2738,6 +2738,12 @@ th {
     text-align: left
 }
 
+.table-statistics {
+    background-color: white !important;
+    color: black;
+    border-radius: 15px;
+}
+
 .table {
     width: 100%;
     max-width: 100%;
@@ -5924,7 +5930,7 @@ a.list-group-item-danger, button.list-group-item-danger {
     background-color: #485563;
     border-top: 1px solid transparent;
     border-bottom-right-radius: -1;
-    border-bottom-left-radius: -1
+    border-bottom-left-radius: -1;
 }
 
 .panel > .list-group, .panel > .panel-collapse > .list-group {
