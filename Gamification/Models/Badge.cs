@@ -23,6 +23,7 @@ namespace Gamification.Models
         public int BadgeID { get; set; }
         public string ImagePath { get; set; }
         public string Name { get; set; }
+        public Nullable<int> BadgeLevel { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users { get; set; }

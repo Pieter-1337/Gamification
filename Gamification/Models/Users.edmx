@@ -11,6 +11,7 @@
           </Key>
           <Property Name="BadgeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="BadgeLevel" Type="int" />
           <Property Name="ImagePath" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="Countries">
@@ -48,7 +49,9 @@
           <Property Name="BadgeID" Type="int" />
         </EntityType>
         <Association Name="FK_Users_Badges">
-          <End Role="Badges" Type="Self.Badges" Multiplicity="0..1" />
+          <End Role="Badges" Type="Self.Badges" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Badges">
@@ -216,6 +219,7 @@
           <Property Name="ImagePath" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Users" Relationship="GamificationModel.FK_Users_Badges" FromRole="Badges" ToRole="Users" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BadgeLevel" Type="Int32" />
         </EntityType>
         <Association Name="FK_Users_Badges">
           <End Type="GamificationModel.Badge" Role="Badges" Multiplicity="0..1" />
@@ -287,6 +291,7 @@
           <EntitySetMapping Name="Badges">
             <EntityTypeMapping TypeName="GamificationModel.Badge">
               <MappingFragment StoreEntitySet="Badges">
+                <ScalarProperty Name="BadgeLevel" ColumnName="BadgeLevel" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
                 <ScalarProperty Name="BadgeID" ColumnName="BadgeID" />
