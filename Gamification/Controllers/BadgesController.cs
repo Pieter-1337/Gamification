@@ -86,7 +86,7 @@ namespace Gamification.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "BadgeID,Name,ImagePath")] Badge badge)
+        public ActionResult Create([Bind(Include = "BadgeID,Name,BadgeLevel,ImagePath")] Badge badge)
         {
             if (ModelState.IsValid)
             {
@@ -118,7 +118,7 @@ namespace Gamification.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "BadgeID,Naam,ImagePath")] Badge badge)
+        public ActionResult Edit([Bind(Include = "BadgeID,Name,BadgeLevel,ImagePath")] Badge badge)
         {
             if (ModelState.IsValid)
             {

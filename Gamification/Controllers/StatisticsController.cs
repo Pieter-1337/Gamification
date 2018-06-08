@@ -27,9 +27,31 @@ namespace Gamification.Controllers
                 var user = (Gamification.Models.Users)Session["User"];
                 if (user.Role == "Admin")
                 {
-                    ViewBag.RegisteredPeopleWholeApp = _userRepository.RegisteredPeopleWholeApp();
-                    ViewBag.RegisteredPeoplePerCountry = _userRepository.RegisteredPeoplePerCountry();
-                    ViewBag.RegisteredPeoplePerDivision = _userRepository.RegisteredPeoplePerDivision();
+                    var users = _userRepository.GetUsers();
+                    //Query results for registered people
+                    ViewBag.RegisteredPeopleWholeApp = _userRepository.RegisteredPeopleWholeApp(users);
+                    ViewBag.RegisteredPeoplePerCountry = _userRepository.RegisteredPeoplePerCountry(users);
+                    ViewBag.RegisteredPeoplePerDivision = _userRepository.RegisteredPeoplePerDivision(users);
+
+                    
+                    //Query results for Badges earned by people
+                    ViewBag.BadgesEarnedWholeApp = _userRepository.BadgesEarnedWholeApp(users);
+                    ViewBag.BadgesEarnedLevel1 = _userRepository.BadgesEarnedLevel1(users);
+                    ViewBag.BadgesEarnedLevel2 = _userRepository.BadgesEarnedLevel2(users);
+                    ViewBag.BadgesEarnedLevel1PerCountry = _userRepository.BadgesEarnedLevel1PerCountry(users);
+                    ViewBag.BadgesEarnedLevel1PerDivision = _userRepository.BadgesEarnedLevel1PerDivision(users);
+                    ViewBag.BadgesEarnedLevel2PerCountry = _userRepository.BadgesEarnedLevel2PerCountry(users);
+                    ViewBag.BadgesEarnedLevel2PerDivision = _userRepository.BadgesEarnedLevel2PerDivision(users);
+
+                    //Query results for Points earned by people
+                    ViewBag.PointsEarnedWholeApp = _userRepository.PointsEarnedWholeApp(users);
+                    ViewBag.PointsEarnedLevel1 = _userRepository.PointsEarnedLevel1(users);
+                    ViewBag.PointsEarnedLevel2 = _userRepository.PointsEarnedLevel2(users);
+                    ViewBag.PointsEarnedLevel1PerCountry = _userRepository.PointsEarnedLevel1PerCountry(users);
+                    ViewBag.PointsEarnedLevel1PerDivision = _userRepository.PointsEarnedLevel1PerDivision(users);
+                    ViewBag.PointsEarnedLevel2PerCountry = _userRepository.PointsEarnedLevel2PerCountry(users);
+                    ViewBag.PointsEarnedLevel2PerDivision = _userRepository.PointsEarnedLevel2PerDivision(users);
+
 
                     return View();
                 }

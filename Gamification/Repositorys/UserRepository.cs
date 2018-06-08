@@ -188,20 +188,19 @@ namespace Gamification.Repositorys
         ////////////////////////////////////////////////////////////////////////////////////
 
         //People registered in the whole app
-        public int RegisteredPeopleWholeApp()
+        public int RegisteredPeopleWholeApp(List<Users> users)
         {
-            var users = GetUsers();
             return (from u in users select u).Count();
         }
 
         //People registered per country
-        public Dictionary<string, int> RegisteredPeoplePerCountry()
+        public Dictionary<string, int> RegisteredPeoplePerCountry(List<Users> users)
         {
             Dictionary<string, int> Mydict = new Dictionary<string, int>(); 
 
             foreach(var country in db.Countries)
             {
-                var users = GetUsers();
+                
                 int CountUsersPerCountry = (from u in users where u.CountryID == country.CountryID select u).Count();
                 Mydict.Add(country.Name, CountUsersPerCountry);
                 
@@ -210,17 +209,235 @@ namespace Gamification.Repositorys
         }
 
         //People registered per division
-        public Dictionary<string , int> RegisteredPeoplePerDivision()
+        public Dictionary<string , int> RegisteredPeoplePerDivision(List<Users> users)
         {
             Dictionary<string, int> Mydict = new Dictionary<string, int>();
 
             foreach(var division in db.Divisions)
             {
-                var users = GetUsers();
+               
                 int CountUsersPerDivision = (from u in users where u.DivisionID == division.DivisionID select u).Count();
                 Mydict.Add(division.Name, CountUsersPerDivision);
             }
             return Mydict;
+        }
+
+        //Badges earned in the whole app
+        public int BadgesEarnedWholeApp(List<Users> users)
+        {
+           int BadgesEarned = 0;
+           var List = (from u in users where (u.BadgeID != null) && (u.Badges.BadgeLevel > 0) select u);
+            foreach(var user in List)
+            {
+                if(user.Badges.BadgeLevel == 1)
+                {
+                    BadgesEarned++;
+                }
+                if(user.Badges.BadgeLevel == 2)
+                {
+                    BadgesEarned = BadgesEarned + 2;
+                }
+            }
+
+            return BadgesEarned;
+        }
+
+        //Badges earned Level1
+        public int BadgesEarnedLevel1(List<Users> users)
+        {
+            return (from u in users where (u.BadgeID != null) && (u.Badges.BadgeLevel > 0) select u).Count();
+        }
+
+        //Badges earned Level2
+        public int BadgesEarnedLevel2(List<Users> users)
+        {
+            return (from u in users where (u.BadgeID != null) && (u.Badges.BadgeLevel > 1) select u).Count();
+        }
+
+        //Badges Earned Level 1 per country
+        public Dictionary<string, int> BadgesEarnedLevel1PerCountry(List<Users> users)
+        {
+            Dictionary<string, int> MyDict = new Dictionary<string, int>();
+
+            foreach(var country in db.Countries)
+            {
+                int CountUsersWithBadgeLevel1OrHigherPerCountry = (from u in users where (u.CountryID == country.CountryID) && (u.BadgeID != null) && (u.Badges.BadgeLevel > 0) select u).Count();
+                MyDict.Add(country.Name, CountUsersWithBadgeLevel1OrHigherPerCountry);
+            }
+            return MyDict;
+        }
+
+        //Badges Earned Level 1 per Division
+        public Dictionary<string, int> BadgesEarnedLevel1PerDivision(List<Users> users)
+        {
+            Dictionary<string, int> Mydict = new Dictionary<string, int>();
+
+            foreach (var division in db.Divisions)
+            {
+
+                int CountUsersWithBadgeLevel1OrHigherPerDivision = (from u in users where (u.DivisionID == division.DivisionID) && (u.BadgeID != null) && (u.Badges.BadgeLevel > 0) select u).Count();
+                Mydict.Add(division.Name, CountUsersWithBadgeLevel1OrHigherPerDivision);
+            }
+            return Mydict;
+        }
+
+        //Badges Earned Level 2 per Country
+        public Dictionary<string, int> BadgesEarnedLevel2PerCountry(List<Users> users)
+        {
+            Dictionary<string, int> MyDict = new Dictionary<string, int>();
+
+            foreach (var country in db.Countries)
+            {
+                int CountUsersWithBadgeLevel2OrHigherPerCountry = (from u in users where (u.CountryID == country.CountryID) && (u.BadgeID != null) && (u.Badges.BadgeLevel > 1) select u).Count();
+                MyDict.Add(country.Name, CountUsersWithBadgeLevel2OrHigherPerCountry);
+            }
+            return MyDict;
+        }
+
+        //Badges Earned Level 2 per Division
+        public Dictionary<string, int> BadgesEarnedLevel2PerDivision(List<Users> users)
+        {
+            Dictionary<string, int> Mydict = new Dictionary<string, int>();
+
+            foreach (var division in db.Divisions)
+            {
+
+                int CountUsersWithBadgeLevel2OrHigherPerDivision = (from u in users where (u.DivisionID == division.DivisionID) && (u.BadgeID != null) && (u.Badges.BadgeLevel > 1) select u).Count();
+                Mydict.Add(division.Name, CountUsersWithBadgeLevel2OrHigherPerDivision);
+            }
+            return Mydict;
+        }
+
+        //Points earned in the whole app
+        public int PointsEarnedWholeApp(List<Users> users)
+        {
+            int points = 0;
+            foreach(var user in users)
+            {
+                int? TempPoints = user.Punten_LVL1 + user.Punten_LVL2;
+                if(TempPoints != null)
+                {
+                    points += Convert.ToInt32(TempPoints);
+                }              
+            }
+            return points;
+        }
+
+        //Points earned Level 1 Total
+        public int PointsEarnedLevel1(List<Users> users)
+        {
+            int points = 0;
+            foreach (var user in users)
+            {
+                int? TempPoints = user.Punten_LVL1;
+                if (TempPoints != null)
+                {
+                    points += Convert.ToInt32(TempPoints);
+                }
+            }
+            return points;
+        }
+
+        //Points earned Level 1 per country
+        public Dictionary<string, int> PointsEarnedLevel1PerCountry(List<Users> users)
+        {
+            Dictionary<string, int> MyDict = new Dictionary<string, int>();
+            foreach(var country in db.Countries)
+            {
+                var List = (from u in users where country.CountryID == u.CountryID select u).ToList();
+                int points = 0;          
+                    foreach (var user in List)
+                    {
+                        int? TempPoints = user.Punten_LVL1;
+                        if (TempPoints != null)
+                        {
+                            points += Convert.ToInt32(TempPoints);
+                        }
+                    }
+                MyDict.Add(country.Name, points);
+            }
+
+            return MyDict;
+        }
+
+        //Points earned Level 1 per Division
+        public Dictionary<string, int> PointsEarnedLevel1PerDivision(List<Users> users)
+        {
+            Dictionary<string, int> MyDict = new Dictionary<string, int>();
+            foreach (var division in db.Divisions)
+            {
+                var List = (from u in users where division.DivisionID == u.DivisionID select u).ToList();
+                int points = 0;
+                foreach (var user in List)
+                {
+                    int? TempPoints = user.Punten_LVL1;
+                    if (TempPoints != null)
+                    {
+                        points += Convert.ToInt32(TempPoints);
+                    }
+                }
+                MyDict.Add(division.Name, points);
+            }
+
+            return MyDict;
+        }
+
+        //Points earned Level 2 Total
+        public int PointsEarnedLevel2(List<Users> users)
+        {
+            int points = 0;
+            foreach (var user in users)
+            {
+                int? TempPoints = user.Punten_LVL2;
+                if (TempPoints != null)
+                {
+                    points += Convert.ToInt32(TempPoints);
+                }
+            }
+            return points;
+        }
+
+        //Points earned Level 2 per Country
+        public Dictionary<string, int> PointsEarnedLevel2PerCountry(List<Users> users)
+        {
+            Dictionary<string, int> MyDict = new Dictionary<string, int>();
+            foreach (var country in db.Countries)
+            {
+                var List = (from u in users where country.CountryID == u.CountryID select u).ToList();
+                int points = 0;
+                foreach (var user in List)
+                {
+                    int? TempPoints = user.Punten_LVL2;
+                    if (TempPoints != null)
+                    {
+                        points += Convert.ToInt32(TempPoints);
+                    }
+                }
+                MyDict.Add(country.Name, points);
+            }
+
+            return MyDict;
+        }
+        //Points earned Level 2 per division
+        public Dictionary<string, int> PointsEarnedLevel2PerDivision(List<Users> users)
+        {
+            Dictionary<string, int> MyDict = new Dictionary<string, int>();
+            foreach (var division in db.Divisions)
+            {
+                var List = (from u in users where division.DivisionID == u.DivisionID select u).ToList();
+                int points = 0;
+                foreach (var user in List)
+                {
+                    int? TempPoints = user.Punten_LVL2;
+                    if (TempPoints != null)
+                    {
+                        points += Convert.ToInt32(TempPoints);
+                    }
+                }
+                MyDict.Add(division.Name, points);
+            }
+
+            return MyDict;
         }
     }
 }
