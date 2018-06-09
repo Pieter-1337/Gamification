@@ -322,6 +322,9 @@
     <Content Include="Views\Badges\Edit.cshtml" />
     <Content Include="Views\Badges\Index.cshtml" />
     <Content Include="Views\Statistics\Index.cshtml" />
+    <Content Include="Views\Statistics\BadgeIndex.cshtml" />
+    <Content Include="Views\Statistics\PointsIndex.cshtml" />
+    <Content Include="Views\Shared\StatisticsUIPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

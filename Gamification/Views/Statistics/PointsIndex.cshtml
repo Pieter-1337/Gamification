@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewBag.Title = "PointsIndex";
+    int TotalPointsLevel1PerCountry = 0;
+    int TotalPointsLevel1PerDivision = 0;
+    int TotalPointsLevel2PerCountry = 0;
+    int TotalPointsLevel2PerDivision = 0;
+}
+
+@Html.Partial("StatisticsUIPartial")
+
+<hr />
+
+<h2><u>Number of points earned</u></h2>
+<h3><u>Whole app:</u> <strong>@ViewBag.PointsEarnedWholeApp</strong></h3>
+
+<hr />
+
+<h3>Total Points Level 1: <strong>@ViewBag.PointsEarnedLevel1</strong></h3>
+
+<h4>Level 1 per Country:</h4>
+<table class="table table-statistics ">
+    <tr>
+        <th>Country</th>
+        <th>Amount</th>
+    </tr>
+    @foreach (var Country in @ViewBag.PointsEarnedLevel1PerCountry as Dictionary<string, int>)
+    {
+        <tr>
+            <td>@Country.Key</td>
+            <td>@Country.Value</td>
+            @{ TotalPointsLevel1PerCountry = TotalPointsLevel1PerCountry + Country.Value; }
+        </tr>
+    }
+    <tr>
+        <td>Total:</td>
+        <td>@TotalPointsLevel1PerCountry</td>
+    </tr>
+</table>
+
+<h4>Level 1 per Division:</h4>
+
+<table class="table  table-statistics">
+    <tr>
+        <th>Division</th>
+        <th>Amount</th>
+    </tr>
+    @foreach (var Division in @ViewBag.PointsEarnedLevel1PerDivision as Dictionary<string, int>)
+    {
+        <tr>
+            <td>@Division.Key</td>
+            <td>@Division.Value</td>
+            @{ TotalPointsLevel1PerDivision = TotalPointsLevel1PerDivision + Division.Value; }
+        </tr>
+    }
+    <tr>
+        <td>Total:</td>
+        <td>@TotalPointsLevel1PerDivision</td>
+    </tr>
+</table>
+
+<h3>Total Points Level 2: <strong>@ViewBag.PointsEarnedLevel2</strong></h3>
+
+<h4>Level 2 per Country:</h4>
+
+<table class="table table-statistics ">
+    <tr>
+        <th>Country</th>
+        <th>Amount</th>
+    </tr>
+    @foreach (var Country in @ViewBag.PointsEarnedLevel2PerCountry as Dictionary<string, int>)
+    {
+        <tr>
+            <td>@Country.Key</td>
+            <td>@Country.Value</td>
+            @{ TotalPointsLevel2PerCountry = TotalPointsLevel2PerCountry + Country.Value; }
+        </tr>
+    }
+    <tr>
+        <td>Total:</td>
+        <td>@TotalPointsLevel2PerCountry</td>
+    </tr>
+</table>
+
+<h4>Level 2 per Division:</h4>
+
+<table class="table  table-statistics">
+    <tr>
+        <th>Division</th>
+        <th>Amount</th>
+    </tr>
+    @foreach (var Division in @ViewBag.PointsEarnedLevel2PerDivision as Dictionary<string, int>)
+    {
+        <tr>
+            <td>@Division.Key</td>
+            <td>@Division.Value</td>
+            @{ TotalPointsLevel2PerDivision = TotalPointsLevel2PerDivision + Division.Value; }
+        </tr>
+    }
+    <tr>
+        <td>Total:</td>
+        <td>@TotalPointsLevel2PerDivision</td>
+    </tr>
+</table>
+

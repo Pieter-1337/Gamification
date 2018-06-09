@@ -208,6 +208,21 @@ namespace Gamification.Repositorys
             return Mydict;         
         }
 
+        //People registered per country By division
+        public Dictionary<string, int> RegisteredPeoplePerCountryByDivision(List<Users> users, int? SearchDivision)
+        {
+            Dictionary<string, int> Mydict = new Dictionary<string, int>();
+
+            foreach (var country in db.Countries)
+            {
+
+                int CountUsersPerCountry = (from u in users where u.CountryID == country.CountryID && u.DivisionID == SearchDivision select u).Count();
+                Mydict.Add(country.Name, CountUsersPerCountry);
+
+            }
+            return Mydict;
+        }
+
         //People registered per division
         public Dictionary<string , int> RegisteredPeoplePerDivision(List<Users> users)
         {
@@ -217,6 +232,20 @@ namespace Gamification.Repositorys
             {
                
                 int CountUsersPerDivision = (from u in users where u.DivisionID == division.DivisionID select u).Count();
+                Mydict.Add(division.Name, CountUsersPerDivision);
+            }
+            return Mydict;
+        }
+
+        //People registered per division By Country
+        public Dictionary<string, int> RegisteredPeoplePerDivisionByCountry(List<Users> users, int? SearchCountry)
+        {
+            Dictionary<string, int> Mydict = new Dictionary<string, int>();
+
+            foreach (var division in db.Divisions)
+            {
+
+                int CountUsersPerDivision = (from u in users where u.DivisionID == division.DivisionID && u.CountryID == SearchCountry select u).Count();
                 Mydict.Add(division.Name, CountUsersPerDivision);
             }
             return Mydict;

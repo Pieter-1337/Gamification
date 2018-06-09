@@ -3,22 +3,45 @@
     ViewBag.Title = "Index";
     int TotalRegisteredPerCountry = 0;
     int TotalRegisteredPerDivision = 0;
-    int TotalBadgesLevel1PerCountry = 0;
-    int TotalBadgesLevel1PerDivision = 0;
-    int TotalBadgesLevel2PerCountry = 0;
-    int TotalBadgesLevel2PerDivision = 0;
-    int TotalPointsLevel1PerCountry = 0;
-    int TotalPointsLevel1PerDivision = 0;
-    int TotalPointsLevel2PerCountry = 0;
-    int TotalPointsLevel2PerDivision = 0;
 }
 
-<h2>Statistics</h2>
+@Html.Partial("StatisticsUIPartial")
+
+<hr />
 
 <h2><u>Number of people registered on the platform</u></h2>
 <h3><u>Whole app:</u> <strong>@ViewBag.RegisteredPeopleWholeApp</strong></h3>
 
-<h4>Per Country:</h4>
+<hr />
+
+<h4 id="PerCountryDiv">Per Country:</h4>
+
+
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    <div class="form-inline">
+
+        <div class="form-group" style="margin-right:25px">
+            <p><input type="checkbox" name="SearchByDivisionCheckBox" value="check" style="margin-right: 10px;" checked="checked" /> Search by division</p>
+            <p>@Html.DropDownList("DivisionID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+        </div>
+
+        <div class="form-group" style="margin-top: 35px;">
+            <p>
+                <input id="PerCountrySearch" name="SearchBtn" class="btn btn-success" type="submit" value="Search" />
+                <a id="PerCountryReset" href="@Url.Action("Index", "Statistics")" class="btn btn-primary">Reset</a>
+            </p>
+        </div>
+    </div>
+}
+
+
+@if (TempData["PerCountryByDivision"] != null)
+{
+    <div class="alert alert-success">@TempData["PerCountryByDivision"]</div>
+}
+
 <table class="table table-statistics ">
     <tr>
         <th>Country</th>
@@ -38,8 +61,36 @@
     </tr>
 </table>
 
+<hr />
 
-<h4>Per Division:</h4>
+<h4 id="PerDivisionDiv">Per Division:</h4>
+
+
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    <div class="form-inline">
+
+        <div class="form-group" style="margin-right:25px">
+            <p><input type="checkbox" name="SearchByCountryCheckBox" value="check" style="margin-right: 10px;" checked="checked" /> Search by country</p>
+            <p>@Html.DropDownList("CountryID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+        </div>
+
+        <div class="form-group" style="margin-top: 35px;">
+            <p>
+                <input id="PerDivisionSearch" name="SearchBtn" class="btn btn-success" type="submit" value="Search" />
+                <a id="PerDivisionReset" href="@Url.Action("Index", "Statistics")" class="btn btn-primary">Reset</a>
+            </p>
+        </div>
+    </div>
+
+}
+
+@if (TempData["PerDivisionByCountry"] != null)
+{
+    <div class="alert alert-success">@TempData["PerDivisionByCountry"]</div>
+}
+
 <table class="table  table-statistics">
     <tr>
         <th>Division</th>
@@ -59,194 +110,50 @@
     </tr>
 </table>
 
-<hr />
+@* The Javascript takes care of correct table beeing scrolled into view when searching or resetting a certain table *@
+<script type="text/javascript" src="~/Scripts/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
 
-<H2><u>Number of people that earned badges</u></H2>
-<h3><u>Whole app:</u> <strong>@ViewBag.BadgesEarnedWholeApp</strong></h3>
+        //console.log(localStorage.getItem("PerCountry"));
+        //console.log(localStorage.getItem("PerDivision"));
 
-<hr />
-<h3>Total Level 1: <strong>@ViewBag.BadgesEarnedLevel1</strong></h3>
-    <h4>Level 1 per Country: </h4>
-
-    <table class="table table-statistics ">
-        <tr>
-            <th>Country</th>
-            <th>Amount</th>
-        </tr>
-        @foreach (var Country in @ViewBag.BadgesEarnedLevel1PerCountry as Dictionary<string, int>)
-        {
-            <tr>
-                <td>@Country.Key</td>
-                <td>@Country.Value</td>
-                @{ TotalBadgesLevel1PerCountry = TotalBadgesLevel1PerCountry + Country.Value; }
-            </tr>
+        if (localStorage.getItem("PerCountry")) {
+            var ScrollTo = document.getElementById("PerCountryDiv");
+            ScrollTo.scrollIntoView();
         }
-        <tr>
-            <td>Total:</td>
-            <td>@TotalBadgesLevel1PerCountry</td>
-        </tr>
-    </table>
 
-    <h4>Level 1 per Division: </h4>
-    
-    <table class="table  table-statistics">
-        <tr>
-            <th>Division</th>
-            <th>Amount</th>
-        </tr>
-        @foreach (var Division in @ViewBag.BadgesEarnedLevel1PerDivision as Dictionary<string, int>)
-        {
-            <tr>
-                <td>@Division.Key</td>
-                <td>@Division.Value</td>
-                @{ TotalBadgesLevel1PerDivision = TotalBadgesLevel1PerDivision + Division.Value; }
-            </tr>
+        if (localStorage.getItem("PerDivision")) {
+            var ScrollTo = document.getElementById("PerDivisionDiv");
+            ScrollTo.scrollIntoView();    
         }
-        <tr>
-            <td>Total:</td>
-            <td>@TotalBadgesLevel1PerDivision</td>
-        </tr>
-    </table>
-    
-    
 
-<h3>Total Level 2: <strong>@ViewBag.BadgesEarnedLevel2</strong></h3>
-    <h4>Level 2 per Country: </h4>
+        localStorage.removeItem("PerCountry");
+        localStorage.removeItem("PerDivision");
 
-    <table class="table table-statistics ">
-        <tr>
-            <th>Country</th>
-            <th>Amount</th>
-        </tr>
-        @foreach (var Country in @ViewBag.BadgesEarnedLevel2PerCountry as Dictionary<string, int>)
-        {
-            <tr>
-                <td>@Country.Key</td>
-                <td>@Country.Value</td>
-                @{ TotalBadgesLevel2PerCountry = TotalBadgesLevel2PerCountry + Country.Value; }
-            </tr>
-        }
-        <tr>
-            <td>Total:</td>
-            <td>@TotalBadgesLevel2PerCountry</td>
-        </tr>
-    </table>
+        var PerCountrySearch = document.getElementById("PerCountrySearch");
+        PerCountrySearch.addEventListener("click", function () {
+            localStorage.setItem("PerCountry", "true");
+        })
 
-    <h4>Level 2 per Division: </h4>
-    
-    <table class="table  table-statistics">
-        <tr>
-            <th>Division</th>
-            <th>Amount</th>
-        </tr>
-        @foreach (var Division in @ViewBag.BadgesEarnedLevel2PerDivision as Dictionary<string, int>)
-        {
-            <tr>
-                <td>@Division.Key</td>
-                <td>@Division.Value</td>
-                @{ TotalBadgesLevel2PerDivision = TotalBadgesLevel2PerDivision + Division.Value; }
-            </tr>
-        }
-        <tr>
-            <td>Total:</td>
-            <td>@TotalBadgesLevel2PerDivision</td>
-        </tr>
-    </table>
+        var PerCountryReset = document.getElementById("PerCountryReset");
+        PerCountryReset.addEventListener("click", function () {
+            localStorage.setItem("PerCountry", "true");
+        })
 
-<hr />
+        var PerDivisionSearch = document.getElementById("PerDivisionSearch");
+        PerDivisionSearch.addEventListener("click", function () {
+            localStorage.setItem("PerDivision", "true");
+        })
 
-<h2><u>Number of points earned</u></h2>
-<h3><u>Whole app:</u> <strong>@ViewBag.PointsEarnedWholeApp</strong></h3>  
+        var PerDivisionReset = document.getElementById("PerDivisionReset");
+        PerDivisionReset.addEventListener("click", function () {
+            localStorage.setItem("PerDivision", "true");
+        })
+    });
+</script>
 
-<hr />
 
-<h3>Total Points Level 1: <strong>@ViewBag.PointsEarnedLevel1</strong></h3>
 
-    <h4>Level 1 per Country:</h4>
-    <table class="table table-statistics ">
-        <tr>
-            <th>Country</th>
-            <th>Amount</th>
-        </tr>
-        @foreach (var Country in @ViewBag.PointsEarnedLevel1PerCountry as Dictionary<string, int>)
-        {
-            <tr>
-                <td>@Country.Key</td>
-                <td>@Country.Value</td>
-                @{ TotalPointsLevel1PerCountry = TotalPointsLevel1PerCountry + Country.Value; }
-            </tr>
-        }
-        <tr>
-            <td>Total:</td>
-            <td>@TotalPointsLevel1PerCountry</td>
-        </tr>
-    </table>
 
-    <h4>Level 1 per Division:</h4>
 
-    <table class="table  table-statistics">
-        <tr>
-            <th>Division</th>
-            <th>Amount</th>
-        </tr>
-        @foreach (var Division in @ViewBag.PointsEarnedLevel1PerDivision as Dictionary<string, int>)
-        {
-            <tr>
-                <td>@Division.Key</td>
-                <td>@Division.Value</td>
-                @{ TotalPointsLevel1PerDivision = TotalPointsLevel1PerDivision + Division.Value; }
-            </tr>
-        }
-        <tr>
-            <td>Total:</td>
-            <td>@TotalPointsLevel1PerDivision</td>
-        </tr>
-    </table>
-
-<h3>Total Points Level 2: <strong>@ViewBag.PointsEarnedLevel2</strong></h3>
-     
-    <h4>Level 2 per Country:</h4>
-
-        <table class="table table-statistics ">
-            <tr>
-                <th>Country</th>
-                <th>Amount</th>
-            </tr>
-            @foreach (var Country in @ViewBag.PointsEarnedLevel2PerCountry as Dictionary<string, int>)
-            {
-                <tr>
-                    <td>@Country.Key</td>
-                    <td>@Country.Value</td>
-                    @{ TotalPointsLevel2PerCountry = TotalPointsLevel2PerCountry + Country.Value; }
-                </tr>
-            }
-            <tr>
-                <td>Total:</td>
-                <td>@TotalPointsLevel2PerCountry</td>
-            </tr>
-        </table>
-
-    <h4>Level 2 per Division:</h4>
-    
-    <table class="table  table-statistics">
-        <tr>
-            <th>Division</th>
-            <th>Amount</th>
-        </tr>
-        @foreach (var Division in @ViewBag.PointsEarnedLevel2PerDivision as Dictionary<string, int>)
-        {
-            <tr>
-                <td>@Division.Key</td>
-                <td>@Division.Value</td>
-                @{ TotalPointsLevel2PerDivision = TotalPointsLevel2PerDivision + Division.Value; }
-            </tr>
-        }
-        <tr>
-            <td>Total:</td>
-            <td>@TotalPointsLevel2PerDivision</td>
-        </tr>
-    </table>    
-
-<hr />
-
-<h2></h2>
