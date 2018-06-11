@@ -50,7 +50,7 @@ namespace Gamification.Controllers
 
                     if(Request["DivisionID"] != null)
                     {
-                        SearchDivision = Convert.ToInt32(Request["DivisionID"]);
+                        SearchDivision = Convert.ToInt32(Request["DivisionID"] );
                     }
                     
 

@@ -16,7 +16,32 @@
 
 <hr />
 <h3>Total Level 1: <strong>@ViewBag.BadgesEarnedLevel1</strong></h3>
-<h4>Level 1 per Country: </h4>
+
+<hr />
+<h4 id="PerCountryLevel1Div">Level 1 per Country: </h4>
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    <div class="form-inline">
+
+        <div class="form-group" style="margin-right:25px">
+            <p><input type="checkbox" name="SearchByDivisionLevel1CheckBox" value="check" style="margin-right: 10px;" checked="checked" /> Search by division</p>
+            <p>@Html.DropDownList("DivisionID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+        </div>
+
+        <div class="form-group" style="margin-top: 35px;">
+            <p>
+                <input id="PerCountryLevel1Search" name="SearchBtn" class="btn btn-success" type="submit" value="Search" />
+                <a id="PerCountryLevel1Reset" href="@Url.Action("BadgeIndex", "Statistics")" class="btn btn-primary">Reset</a>
+            </p>
+        </div>
+    </div>
+}
+
+@if (TempData["PerCountryByDivisionLevel1"] != null)
+{
+    <div class="alert alert-success">@TempData["PerCountryByDivisionLevel1"]</div>
+}
 
 <table class="table table-statistics ">
     <tr>
@@ -37,7 +62,31 @@
     </tr>
 </table>
 
-<h4>Level 1 per Division: </h4>
+<h4 id="PerDivisionLevel1Div">Level 1 per Division: </h4>
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    <div class="form-inline">
+
+        <div class="form-group" style="margin-right:25px">
+            <p><input type="checkbox" name="SearchByCountryLevel1CheckBox" value="check" style="margin-right: 10px;" checked="checked" /> Search by country</p>
+            <p>@Html.DropDownList("CountryID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+        </div>
+
+        <div class="form-group" style="margin-top: 35px;">
+            <p>
+                <input id="PerDivisionLevel1Search" name="SearchBtn" class="btn btn-success" type="submit" value="Search" />
+                <a id="PerDivisionLevel1Reset" href="@Url.Action("BadgeIndex", "Statistics")" class="btn btn-primary">Reset</a>
+            </p>
+        </div>
+    </div>
+
+}
+
+@if (TempData["PerDivisionByCountryLevel1"] != null)
+{
+    <div class="alert alert-success">@TempData["PerDivisionByCountryLevel1"]</div>
+}
 
 <table class="table  table-statistics">
     <tr>
@@ -58,10 +107,35 @@
     </tr>
 </table>
 
-
+<hr />
 
 <h3>Total Level 2: <strong>@ViewBag.BadgesEarnedLevel2</strong></h3>
-<h4>Level 2 per Country: </h4>
+
+<hr />
+<h4 id="PerCountryLevel2Div">Level 2 per Country: </h4>
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    <div class="form-inline">
+
+        <div class="form-group" style="margin-right:25px">
+            <p><input type="checkbox" name="SearchByDivisionLevel2CheckBox" value="check" style="margin-right: 10px;" checked="checked" /> Search by division</p>
+            <p>@Html.DropDownList("DivisionID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+        </div>
+
+        <div class="form-group" style="margin-top: 35px;">
+            <p>
+                <input id="PerCountryLevel2Search" name="SearchBtn" class="btn btn-success" type="submit" value="Search" />
+                <a id="PerCountryLevel2Reset" href="@Url.Action("BadgeIndex", "Statistics")" class="btn btn-primary">Reset</a>
+            </p>
+        </div>
+    </div>
+}
+
+@if (TempData["PerCountryByDivisionLevel2"] != null)
+{
+    <div class="alert alert-success">@TempData["PerCountryByDivisionLevel2"]</div>
+}
 
 <table class="table table-statistics ">
     <tr>
@@ -82,7 +156,31 @@
     </tr>
 </table>
 
-<h4>Level 2 per Division: </h4>
+<h4 id="PerDivisionLevel2Div">Level 2 per Division: </h4>
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    <div class="form-inline">
+
+        <div class="form-group" style="margin-right:25px">
+            <p><input type="checkbox" name="SearchByCountryLevel2CheckBox" value="check" style="margin-right: 10px;" checked="checked" /> Search by country</p>
+            <p>@Html.DropDownList("CountryID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+        </div>
+
+        <div class="form-group" style="margin-top: 35px;">
+            <p>
+                <input id="PerDivisionLevel2Search" name="SearchBtn" class="btn btn-success" type="submit" value="Search" />
+                <a id="PerDivisionLevel2Reset" href="@Url.Action("BadgeIndex", "Statistics")" class="btn btn-primary">Reset</a>
+            </p>
+        </div>
+    </div>
+
+}
+
+@if (TempData["PerDivisionByCountryLevel2"] != null)
+{
+    <div class="alert alert-success">@TempData["PerDivisionByCountryLevel2"]</div>
+}
 
 <table class="table  table-statistics">
     <tr>
@@ -103,3 +201,79 @@
     </tr>
 </table>
 
+@* The Javascript takes care of correct table beeing scrolled into view when searching or resetting a certain table *@
+<script type="text/javascript" src="~/Scripts/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        console.log(localStorage.getItem("PerCountryLevel1"));
+        console.log(localStorage.getItem("PerDivisionLevel1"));
+        console.log(localStorage.getItem("PerCountryLevel2"));
+        console.log(localStorage.getItem("PerDivisionLevel2"));
+
+        if (localStorage.getItem("PerCountryLevel1")) {
+            var ScrollTo = document.getElementById("PerCountryLevel1Div");
+            ScrollTo.scrollIntoView();
+        }
+
+        if (localStorage.getItem("PerDivisionLevel1")) {
+            var ScrollTo = document.getElementById("PerDivisionLevel1Div");
+            ScrollTo.scrollIntoView();
+        }
+
+        if (localStorage.getItem("PerCountryLevel2")) {
+            var ScrollTo = document.getElementById("PerCountryLevel2Div");
+            ScrollTo.scrollIntoView();
+        }
+
+        if (localStorage.getItem("PerDivisionLevel2")) {
+            var ScrollTo = document.getElementById("PerDivisionLevel2Div");
+            ScrollTo.scrollIntoView();
+        }
+
+        localStorage.removeItem("PerCountryLevel1");
+        localStorage.removeItem("PerDivisionLevel1");
+        localStorage.removeItem("PerCountryLevel2");
+        localStorage.removeItem("PerDivisionLevel2");
+
+        var PerCountryLevel1Search = document.getElementById("PerCountryLevel1Search");
+        PerCountryLevel1Search.addEventListener("click", function () {
+            localStorage.setItem("PerCountryLevel1", "true");
+        })
+
+        var PerCountryLevel1Reset = document.getElementById("PerCountryLevel1Reset");
+        PerCountryLevel1Reset.addEventListener("click", function () {
+            localStorage.setItem("PerCountryLevel1", "true");
+        })
+
+        var PerDivisionLevel1Search = document.getElementById("PerDivisionLevel1Search");
+        PerDivisionLevel1Search.addEventListener("click", function () {
+            localStorage.setItem("PerDivisionLevel1", "true");
+        })
+
+        var PerDivisionLevel1Reset = document.getElementById("PerDivisionLevel1Reset");
+        PerDivisionLevel1Reset.addEventListener("click", function () {
+            localStorage.setItem("PerDivisionLevel1", "true");
+        })
+
+        PerCountryLevel2Search = document.getElementById("PerCountryLevel2Search");
+        PerCountryLevel2Search.addEventListener("click", function () {
+            localStorage.setItem("PerCountryLevel2", "true");
+        })
+
+        PerCountryLevel2Reset = document.getElementById("PerCountryLevel2Reset");
+        PerCountryLevel2Reset.addEventListener("click", function () {
+            localStorage.setItem("PerCountryLevel2", "true");
+        })
+
+        var PerDivisionLevel2Search = document.getElementById("PerDivisionLevel2Search");
+        PerDivisionLevel2Search.addEventListener("click", function () {
+            localStorage.setItem("PerDivisionLevel2", "true");
+        })
+
+        var PerDivisionLevel2Reset = document.getElementById("PerDivisionLevel2Reset");
+        PerDivisionLevel2Reset.addEventListener("click", function () {
+            localStorage.setItem("PerDivisionLevel2", "true");
+        })
+    });
+</script>

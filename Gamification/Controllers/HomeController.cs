@@ -39,7 +39,7 @@ namespace Gamification.Controllers
 
             if (Request["CountryID"] != null)
             {
-                SearchCountry = Convert.ToInt32(Request["CountryID"]);
+                SearchCountry = Convert.ToInt32(Request["CountryID"]);  
             }
 
             //Search by Name & Username & Country
