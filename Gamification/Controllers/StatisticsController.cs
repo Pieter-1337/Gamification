@@ -41,6 +41,8 @@ namespace Gamification.Controllers
                         SearchDivision = Convert.ToInt32(Request["DivisionID"]);
                     }
 
+
+
                     var users = _userRepository.GetUsers();
 
                     //Search By Division
@@ -248,6 +250,7 @@ namespace Gamification.Controllers
                         TempData["PerCountryByDivisionLevel1"] = $"You searched on: {SearchedDivision.Name}";
                         ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
                         ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                       
                         return View();
                     }
 
@@ -314,6 +317,7 @@ namespace Gamification.Controllers
 
                     ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
                     ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
+                 
                     return View();
                 }
                 else

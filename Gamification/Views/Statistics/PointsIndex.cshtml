@@ -28,7 +28,7 @@
 
         <div class="form-group" style="margin-right:25px">
             <p><input type="checkbox" name="SearchByDivisionLevel1CheckBox" value="check" style="margin-right: 10px;" checked="checked" /> Search by division</p>
-            <p>@Html.DropDownList("DivisionID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+            <p>@Html.DropDownList("DivisionID",null, "--Select Item--" ,htmlAttributes: new { @class = "form-control", style = "width: 175px", @id = "dropdownCountryLevel1" })</p>
         </div>
 
         <div class="form-group" style="margin-top: 35px;">
@@ -72,7 +72,7 @@
 
         <div class="form-group" style="margin-right:25px">
             <p><input type="checkbox" name="SearchByCountryLevel1CheckBox" value="check" style="margin-right: 10px;" checked="checked" /> Search by country</p>
-            <p>@Html.DropDownList("CountryID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+            <p>@Html.DropDownList("CountryID",null, "Select Item" ,htmlAttributes: new { @class = "form-control", style = "width: 175px", @id = "dropdownDivisionLevel1" })</p>
         </div>
 
         <div class="form-group" style="margin-top: 35px;">
@@ -123,7 +123,7 @@
 
         <div class="form-group" style="margin-right:25px">
             <p><input type="checkbox" name="SearchByDivisionLevel2CheckBox" value="check" style="margin-right: 10px;" checked="checked" /> Search by division</p>
-            <p>@Html.DropDownList("DivisionID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+            <p>@Html.DropDownList("DivisionID", null, "Select Item" ,htmlAttributes: new { @class = "form-control", style = "width: 175px", @id = "dropdownCountryLevel2" })</p>
         </div>
 
         <div class="form-group" style="margin-top: 35px;">
@@ -167,7 +167,7 @@
 
         <div class="form-group" style="margin-right:25px">
             <p><input type="checkbox" name="SearchByCountryLevel2CheckBox" value="check" style="margin-right: 10px;" checked="checked" /> Search by country</p>
-            <p>@Html.DropDownList("CountryID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+            <p>@Html.DropDownList("CountryID", null,"--Select Item--" ,htmlAttributes: new { @class = "form-control", style = "width: 175px", @id = "dropdownDivisionLevel2" })</p>
         </div>
 
         <div class="form-group" style="margin-top: 35px;">
@@ -279,5 +279,62 @@
         PerDivisionLevel2Reset.addEventListener("click", function () {
             localStorage.setItem("PerDivisionLevel2", "true");
         })
+    });
+
+    //Disable the --Select Item-- options for the dropdowns
+    var DropdownCountryLevel1 = document.getElementById("dropdownCountryLevel1");
+    if (DropdownCountryLevel1.selectedIndex == "0") {
+        PerCountryLevel1Search.setAttribute("disabled", "true");
+    }
+
+    DropdownCountryLevel1.addEventListener("change", function () {
+        if (DropdownCountryLevel1.selectedIndex == "0") {
+            PerCountryLevel1Search.setAttribute("disabled", "true");
+        }
+        else {
+            PerCountryLevel1Search.removeAttribute("disabled");
+        }
+    });
+
+    var DropdownCountryLevel2 = document.getElementById("dropdownCountryLevel2");
+    if (DropdownCountryLevel2.selectedIndex == "0") {
+        PerCountryLevel2Search.setAttribute("disabled", "true");
+    }
+
+    DropdownCountryLevel2.addEventListener("change", function () {
+        if (DropdownCountryLevel2.selectedIndex == "0") {
+            PerCountryLevel2Search.setAttribute("disabled", "true");
+        }
+        else {
+            PerCountryLevel2Search.removeAttribute("disabled");
+        }
+    });
+
+    var DropdownDivisionLevel1 = document.getElementById("dropdownDivisionLevel1");
+    if (DropdownDivisionLevel1.selectedIndex == "0") {
+        PerDivisionLevel1Search.setAttribute("disabled", "true");
+    }
+
+    DropdownDivisionLevel1.addEventListener("change", function () {
+        if (DropdownDivisionLevel1.selectedIndex == "0") {
+            PerDivisionLevel1Search.setAttribute("disabled", "true");
+        }
+        else {
+            PerDivisionLevel1Search.removeAttribute("disabled");
+        }
+    });
+
+    var DropdownDivisionLevel2 = document.getElementById("dropdownDivisionLevel2");
+    if (DropdownDivisionLevel2.selectedIndex == "0") {
+        PerDivisionLevel2Search.setAttribute("disabled", "true");
+    }
+
+    DropdownDivisionLevel2.addEventListener("change", function () {
+        if (DropdownDivisionLevel2.selectedIndex == "0") {
+            PerDivisionLevel2Search.setAttribute("disabled", "true");
+        }
+        else {
+            PerDivisionLevel2Search.removeAttribute("disabled");
+        }
     });
 </script>
