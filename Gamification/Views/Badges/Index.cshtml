@@ -22,11 +22,14 @@
 
         <div class="form-group" style="margin-right:25px;">
             <p><input type="checkbox" name="SearchByBadgeCheckBox" value="check" checked="checked" style="margin-right: 10px;" />Search by badge</p>
-            <p>@Html.DropDownList("BadgeID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+            <p>@Html.DropDownList("BadgeID", null, "--Select Item--", htmlAttributes: new { @class = "form-control", style = "width: 175px", @id = "dropdownBadge" })</p>
         </div>
 
         <div class="form-group" style="margin-top: 35px;">
-            <p><input name="SearchBtn" class="btn btn-success" type="submit" value="Search" /> </p>
+            <p>
+                <input id="SearchBtn" name="SearchBtn" class="btn btn-success" type="submit" value="Search" />
+                <a href="@Url.Action("Index", "Badges")" class="btn btn-primary">Reset</a>
+            </p>
         </div>
     </div>
 
@@ -63,11 +66,35 @@
                 @Html.DisplayFor(modelItem => item.ImagePath)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.BadgeID }, new { @class = "btn btn-primary"}) 
-                @Html.ActionLink("Details", "Details", new { id = item.BadgeID }, new { @class = "btn btn-warning"}) 
-                @Html.ActionLink("Delete", "Delete", new { id = item.BadgeID }, new { @class = "btn btn-danger"})
+                @Html.ActionLink("Edit", "Edit", new { id = item.BadgeID }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Details", "Details", new { id = item.BadgeID }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.BadgeID }, new { @class = "btn btn-danger" })
             </td>
         </tr>
     }
 
 </table>
+
+<script type="text/javascript" src="~/Scripts/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //Disable the --Select Item-- options for the dropdowns
+
+        var SearchBtn = document.getElementById("SearchBtn");
+        var DropdownBadge = document.getElementById("dropdownBadge");
+        if (DropdownBadge.selectedIndex == "0") {
+            SearchBtn.setAttribute("disabled", "true");
+        }
+
+        DropdownBadge.addEventListener("change", function () {
+            if (DropdownBadge.selectedIndex == "0") {
+                SearchBtn.setAttribute("disabled", "true");
+            }
+            else {
+                SearchBtn.removeAttribute("disabled");
+            }
+        });
+    });
+</script>
+

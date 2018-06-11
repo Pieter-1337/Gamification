@@ -1,7 +1,7 @@
-﻿@model List <Gamification.Models.Users>
+﻿@model List<Gamification.Models.Users>
 
 
-@{ 
+@{
     var i = 0;
 }
 
@@ -15,17 +15,20 @@
     {
         <div class="form-inline">
             <div class="form-group" style="margin-right:25px;">
-                <p><input type="checkbox" name="SearchByNameCheckBox" value="check" checked="checked" style="margin-right: 10px;" />Search by name or username</p>
+                <p><input type="checkbox" name="SearchByNameCheckBox" id="SearchByNameCheckBox" value="check" checked="checked" style="margin-right: 10px;" />Search by name or username</p>
                 <p><input name="SearchByNameTextBox" class="form-control" style="width: 175px;" placeholder="Enter search request" /></p>
             </div>
 
             <div class="form-group" style="margin-right:25px;">
-                <p><input type="checkbox" name="SearchByCountryCheckBox" value="check" style="margin-right: 10px;" />Search by country</p>
-                <p>@Html.DropDownList("CountryID", null,htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+                <p><input type="checkbox" name="SearchByCountryCheckBox" id="SearchByCountryCheckBox" value="check" style="margin-right: 10px;" />Search by country</p>
+                <p>@Html.DropDownList("CountryID", null, "--Select Item--", htmlAttributes: new { @class = "form-control", style = "width: 175px", @id = "dropdownCountry" })</p>
             </div>
 
             <div class="form-group" style="margin-top: 35px;">
-                <p><input name="SearchBtn" class="btn btn-success" type="submit" value="Search" /> </p>
+                <p>
+                    <input id="SearchBtn" name="SearchBtn" class="btn btn-success" type="submit" value="Search" />
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Reset</a>
+                </p>
             </div>
         </div>
 
@@ -69,3 +72,58 @@
         <div class="alert alert-danger-message">@TempData["UserListResult"]</div>
     }
 </div>
+
+<script type="text/javascript" src="~/Scripts/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //Disable the --Select Item-- options for the dropdowns
+        
+        var SearchBtn = document.getElementById("SearchBtn");
+        var DropdownCountry = document.getElementById("dropdownCountry");
+        var CountryCheckBox = document.getElementById("SearchByCountryCheckBox");
+        var SearchByNameCheckBox = document.getElementById("SearchByNameCheckBox");
+        if (DropdownCountry.selectedIndex == "0" && CountryCheckBox.checked == true) {
+
+            SearchBtn.setAttribute("disabled", "true");
+        }
+
+        DropdownCountry.addEventListener("change", function () {
+            if (DropdownCountry.selectedIndex == "0" && CountryCheckBox.checked == true) {
+                SearchBtn.setAttribute("disabled", "true");
+            }
+            else {
+                SearchBtn.removeAttribute("disabled");
+            }
+        });
+
+        CountryCheckBox.addEventListener("change", function () {
+            if (DropdownCountry.selectedIndex == "0" && CountryCheckBox.checked == true) {
+                SearchBtn.setAttribute("disabled", "true");
+            }
+            else {
+                if (SearchByNameCheckBox.checked == false && CountryCheckBox.checked == false) {
+                    SearchBtn.setAttribute("disabled", "true");
+                }
+                else {
+                    SearchBtn.removeAttribute("disabled");
+                }
+                
+            }
+        });
+
+
+        SearchByNameCheckBox.addEventListener("change", function () {
+            if (SearchByNameCheckBox.checked == false && CountryCheckBox.checked == false) {
+                SearchBtn.setAttribute("disabled", "true");
+            }
+            else {
+                SearchBtn.removeAttribute("disabled");
+            }
+        });
+
+
+
+
+    });
+</script>

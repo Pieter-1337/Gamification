@@ -23,11 +23,14 @@
 
         <div class="form-group" style="margin-right:25px;">
             <p><input type="checkbox" name="SearchByDivisionCheckBox" value="check" checked="checked" style="margin-right: 10px;" />Search by Division</p>
-            <p>@Html.DropDownList("DivisionID", null, htmlAttributes: new { @class = "form-control", style = "width: 175px" })</p>
+            <p>@Html.DropDownList("DivisionID", null, "--Select Item--", htmlAttributes: new { @class = "form-control", style = "width: 175px", @id = "dropdownDivision" })</p>
         </div>
 
         <div class="form-group" style="margin-top: 35px;">
-            <p><input name="SearchBtn" class="btn btn-success" type="submit" value="Search" /> </p>
+            <p>
+                <input id="SearchBtn" name="SearchBtn" class="btn btn-success" type="submit" value="Search" />
+                <a href="@Url.Action("Index", "Divisions")" class="btn btn-primary">Reset</a>
+            </p>
         </div>
     </div>
 
@@ -62,3 +65,26 @@
     }
 
 </table>
+
+<script type="text/javascript" src="~/Scripts/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //Disable the --Select Item-- options for the dropdowns
+
+        var SearchBtn = document.getElementById("SearchBtn");
+        var DropdownDivision = document.getElementById("dropdownDivision");
+        if (DropdownDivision.selectedIndex == "0") {
+            SearchBtn.setAttribute("disabled", "true");
+        }
+
+        DropdownDivision.addEventListener("change", function () {
+            if (DropdownDivision.selectedIndex == "0") {
+                SearchBtn.setAttribute("disabled", "true");
+            }
+            else {
+                SearchBtn.removeAttribute("disabled");
+            }
+        });
+    });
+</script>
