@@ -224,18 +224,19 @@ namespace Gamification.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "UserID,Username,Email,First_Name,Last_Name,Punten_LVL1,Punten_LVL2,DivisionID,CountryID,Password,ConfirmPassword")] Users users)
         {
-            if (users.Password == users.ConfirmPassword)
-            {
-
+           
                 if (ModelState.IsValid)
                 {
                     //Leave the password and username variable before the bcrypt otherwise the _userRepo.GetUser will fail
                     var password = users.Password;
                     var username = users.Username;
+                    var email = users.Email;
+                    bool checkUsername = _userRepository.CheckUniqueFieldsUsername(username, password);
+                    bool checkEmail = _userRepository.CheckUniqueFieldsEmail(email);
+                    bool passwordbool = users.Password == users.ConfirmPassword;
 
-                    if (_userRepository.CheckUniqueFields(username, password))
+                    if (checkUsername == true && checkEmail == true && passwordbool == true)
                     {
-
                         users.Password = BCrypt.Net.BCrypt.HashPassword(users.Password);
                         users.ConfirmPassword = BCrypt.Net.BCrypt.HashPassword(users.ConfirmPassword);
                         users.Role = "User";
@@ -246,7 +247,7 @@ namespace Gamification.Controllers
                         var admin = (Gamification.Models.Users)Session["User"];
                         if (user != null && admin != null)
                         {
-                            if(admin.Role != "Admin")
+                            if (admin.Role != "Admin")
                             {
 
                                 Session["User"] = user;
@@ -268,21 +269,25 @@ namespace Gamification.Controllers
                     }
                     else
                     {
-                        TempData["RegistrationValid"] = "This username is already in use please choose another username";
+                        if(checkUsername == false)
+                        {    
+                            TempData["UsernameValid"] +=  "- This Username adress is already in use please choose another username";
+                        }
+                        if(checkEmail == false)
+                        {
+                            TempData["EmailValid"] += "- This Email adress is already in use please choose another Email";
+                        }
+                        if(passwordbool == false)
+                        {
+                            TempData["PasswordsValid"] += "- The password and Confirm password fields did not match please try again";
+                        }
+                        
                         ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
                         ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
                         return View(users);
                     }
                 }
-            }
-            else
-            {
-                TempData["RegistrationValid"] = "The password and Confirm password fields did not match please try again";
-                ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
-                ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
-                return View(users);
-            }
-
+            
             ViewBag.DivisionID = new SelectList(db.Divisions, "DivisionID", "Name").OrderBy(d => d.Text);
             ViewBag.CountryID = new SelectList(db.Countries, "CountryID", "Name").OrderBy(c => c.Text);
             return View(users);

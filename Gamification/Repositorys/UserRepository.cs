@@ -150,7 +150,7 @@ namespace Gamification.Repositorys
        
         //Check if a Username is already taken when someone registers or creates a new user
         //////////////////////////////////////////////////////////////////////////////////////////
-        public bool CheckUniqueFields(string username, string password)
+        public bool CheckUniqueFieldsUsername(string username, string password)
         {    
             var User = (from user in db.Users where user.Username == username select user).FirstOrDefault();
             
@@ -163,6 +163,20 @@ namespace Gamification.Repositorys
                 return true;
             }       
          
+        }
+
+        public bool CheckUniqueFieldsEmail(string email)
+        {
+            var User = (from user in db.Users where user.Email.ToLower() == email.ToLower() select user).FirstOrDefault();
+
+            if (User != null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         //Check if old pass matches the one in the db if true replace it with new pass

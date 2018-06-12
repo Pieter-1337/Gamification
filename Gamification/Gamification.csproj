@@ -165,12 +165,18 @@
     <Compile Include="Models\Badge.cs">
       <DependentUpon>Users.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BadgesProperties.cs" />
+    <Compile Include="Models\BadgesUitbreiding.cs" />
     <Compile Include="Models\Countries.cs">
       <DependentUpon>Users.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CountriesProperties.cs" />
+    <Compile Include="Models\CountriesUitbreiding.cs" />
+    <Compile Include="Models\DivisionProperties.cs" />
     <Compile Include="Models\Divisions.cs">
       <DependentUpon>Users.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DivisionUitbreiding.cs" />
     <Compile Include="Models\Users.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
