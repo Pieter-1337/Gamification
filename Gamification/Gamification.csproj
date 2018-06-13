@@ -190,11 +190,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Users.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\Users1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Users.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\UsersProperties.cs" />
     <Compile Include="Models\UsersUitbreiding.cs" />
     <Compile Include="Controllers\AdminController.cs" />
