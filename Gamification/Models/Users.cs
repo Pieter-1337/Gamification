@@ -31,7 +31,5 @@ namespace Gamification.Models
         public virtual Countries Countries { get; set; }
         public virtual Divisions Divisions { get; set; }
         public virtual Badge Badges { get; set; }
-        public virtual Users Users1 { get; set; }
-        public virtual Users Users2 { get; set; }
     }
 }

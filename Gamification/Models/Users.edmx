@@ -86,18 +86,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Users_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="Users1" Type="Self.Users" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Users1">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="GamificationModelStoreContainer">
           <EntitySet Name="Badges" EntityType="Self.Badges" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Countries" EntityType="Self.Countries" Schema="dbo" store:Type="Tables" />
@@ -114,10 +102,6 @@
           <AssociationSet Name="FK_Users_Divisions" Association="Self.FK_Users_Divisions">
             <End Role="Divisions" EntitySet="Divisions" />
             <End Role="Users" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Users_Users" Association="Self.FK_Users_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Users1" EntitySet="Users" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -162,9 +146,7 @@
           <NavigationProperty Name="Divisions" Relationship="Self.FK_Users_Divisions" FromRole="Users" ToRole="Divisions" />
           <Property Name="BadgeID" Type="Int32" />
           <NavigationProperty Name="Badges" Relationship="GamificationModel.FK_Users_Badges" FromRole="Users" ToRole="Badges" />
-          <NavigationProperty Name="Users1" Relationship="GamificationModel.FK_Users_Users" FromRole="Users" ToRole="Users1" />
-          <NavigationProperty Name="Users2" Relationship="GamificationModel.FK_Users_Users" FromRole="Users1" ToRole="Users" />
-        </EntityType>
+          </EntityType>
         <Association Name="FK_Users_Countries">
           <End Role="Countries" Type="Self.Countries" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
@@ -206,10 +188,6 @@
             <End Role="Badges" EntitySet="Badges" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
-          <AssociationSet Name="FK_Users_Users" Association="GamificationModel.FK_Users_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Users1" EntitySet="Users" />
-          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Badge">
           <Key>
@@ -230,18 +208,6 @@
             </Principal>
             <Dependent Role="Users">
               <PropertyRef Name="BadgeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Users_Users">
-          <End Type="GamificationModel.Users" Role="Users" Multiplicity="1" />
-          <End Type="GamificationModel.Users" Role="Users1" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Users1">
-              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
