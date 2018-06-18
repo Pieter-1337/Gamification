@@ -59,8 +59,7 @@ namespace Gamification.Repositorys
         //Get Users functions
         //////////////////////////////////////////////////////////////////////////////////
         public List<Users> GetUsers()
-        {
-            
+        { 
             return db.Users.OrderBy(u => u.UserID).ToList();
         }
 

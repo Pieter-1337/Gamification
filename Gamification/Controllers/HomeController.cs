@@ -36,10 +36,14 @@ namespace Gamification.Controllers
             {
                 SearchString = Request["SearchByNameTextBox"].ToString();
             }
-
+        
             if (Request["CountryID"] != null)
             {
-                SearchCountry = Convert.ToInt32(Request["CountryID"]);  
+              bool result = Int32.TryParse(Request["CountryID"], out int number);
+                if (result)
+                {
+                    SearchCountry = Convert.ToInt32(Request["CountryID"]);
+                }
             }
 
             //Search by Name & Username & Country
